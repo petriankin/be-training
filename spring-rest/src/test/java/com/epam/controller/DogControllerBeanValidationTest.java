@@ -1,12 +1,12 @@
 package com.epam.controller;
 
 import com.epam.model.Dog;
+import com.epam.util.TestDataUtils;
 import org.testng.annotations.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -15,17 +15,15 @@ import static org.testng.Assert.assertFalse;
 
 public class DogControllerBeanValidationTest {
 
-    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    Validator va1lidator = factory.getValidator();
+    private Validator va1lidator = Validation.buildDefaultValidatorFactory()
+            .getValidator();
+
+    // TODO: 7/25/19 positive case test
 
     @Test
-    public void testWhenNameIsLessThan1SymbolLong_validationFailed() {
-        Dog dog = Dog.builder()
-                .dateOfBirth(LocalDate.now().minusMonths(1))
-                .name("")
-                .height(10)
-                .weight(10)
-                .build();
+    public void whenNameIsLessThan1SymbolLong_validationFailed() {
+        Dog dog = TestDataUtils.generateTestDog();
+        dog.setName("");
 
         Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
         String message = violations.stream()
@@ -38,13 +36,9 @@ public class DogControllerBeanValidationTest {
     }
 
     @Test
-    public void testWhenNameIsMoreThan100SymbolsLong_validationFailed() {
-        Dog dog = Dog.builder()
-                .dateOfBirth(LocalDate.now().minusMonths(1))
-                .name(generateLongName())
-                .height(10)
-                .weight(10)
-                .build();
+    public void whenNameIsMoreThan100SymbolsLong_validationFailed() {
+        Dog dog = TestDataUtils.generateTestDog();
+        dog.setName(TestDataUtils.generateLongName());
 
         Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
         String message = violations.stream()
@@ -57,13 +51,9 @@ public class DogControllerBeanValidationTest {
     }
 
     @Test
-    public void testWhenDateIsNotInThePast_validationFailed() {
-        Dog dog = Dog.builder()
-                .dateOfBirth(LocalDate.now())
-                .name("Name")
-                .height(10)
-                .weight(10)
-                .build();
+    public void whenDateIsNotInThePast_validationFailed() {
+        Dog dog = TestDataUtils.generateTestDog();
+        dog.setDateOfBirth(LocalDate.now());
 
         Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
         String message = violations.stream()
@@ -76,13 +66,9 @@ public class DogControllerBeanValidationTest {
     }
 
     @Test
-    public void testWhenHeightIsNotPositive_validationFailed() {
-        Dog dog = Dog.builder()
-                .dateOfBirth(LocalDate.now().minusMonths(1))
-                .name("Name")
-                .height(0)
-                .weight(10)
-                .build();
+    public void whenHeightIsNotPositive_validationFailed() {
+        Dog dog = TestDataUtils.generateTestDog();
+        dog.setHeight(0);
 
         Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
         String message = violations.stream()
@@ -95,13 +81,9 @@ public class DogControllerBeanValidationTest {
     }
 
     @Test
-    public void testWhenWeightIsNotPositive_validationFailed() {
-        Dog dog = Dog.builder()
-                .dateOfBirth(LocalDate.now().minusMonths(1))
-                .name("Name")
-                .height(10)
-                .weight(0)
-                .build();
+    public void whenWeightIsNotPositive_validationFailed() {
+        Dog dog = TestDataUtils.generateTestDog();
+        dog.setWeight(0);
 
         Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
         String message = violations.stream()
@@ -111,14 +93,6 @@ public class DogControllerBeanValidationTest {
 
         assertFalse(violations.isEmpty());
         assertEquals(message, "Weight must be greater than zero");
-    }
-
-    private String generateLongName() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 101; i++) {
-            sb.append("a");
-        }
-        return sb.toString();
     }
 
 

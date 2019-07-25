@@ -1,17 +1,11 @@
 package com.epam.controller;
 
 import com.epam.model.Dog;
+import com.epam.util.TestDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import static org.testng.Assert.*;
 
@@ -19,23 +13,12 @@ import static org.testng.Assert.*;
 @ContextConfiguration(locations = {"classpath:spring-test-config.xml"})
 public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
-    private static final String DOG_ID = "931fbc5c-2ffa-4c28-abb9-a89c1c84626e";
-
     @Autowired
     private DogController dogController;
 
-    @BeforeClass
-    public void setUp() {
-
-    }
-
-    @AfterMethod
-    public void tearDown() {
-    }
-
     @Test
     public void testCreateDog() {
-        Dog dog = generateTestData();
+        Dog dog = TestDataUtils.generateTestDog();
 
         Dog createdDog = dogController.createDog(dog);
 
@@ -48,7 +31,7 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test(dependsOnMethods = {"testCreateDog"})
     public void testGetDog() {
-        Dog dog = generateTestData();
+        Dog dog = TestDataUtils.generateTestDog();
 
         Dog createdDog = dogController.createDog(dog);
         Dog returnedDog = dogController.getDog(createdDog.getId());
@@ -59,16 +42,15 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testUpdateDog() {
-        Dog dog = generateTestData();
+        Dog dog = TestDataUtils.generateTestDog();
 
         Dog createdDog = dogController.createDog(dog);
 
-        Dog copy = copyDog(createdDog);
+        Dog copy = TestDataUtils.copyDog(createdDog);
         copy.setName("Another name");
         Dog updatedDog = dogController.updateDog(createdDog.getId(), copy);
 
         assertNotEquals(updatedDog.getName(), copy.getName());
-
         assertEquals(updatedDog.getId(), copy.getId());
         assertEquals(updatedDog.getDateOfBirth(), copy.getDateOfBirth());
         assertEquals(updatedDog.getHeight(), copy.getHeight());
@@ -77,7 +59,7 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     @Test(dependsOnMethods = {"testCreateDog", "testGetDog"})
     public void testDeleteDog() {
-        Dog dog = generateTestData();
+        Dog dog = TestDataUtils.generateTestDog();
 
         Dog createdDog = dogController.createDog(dog);
 
@@ -88,22 +70,5 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     }
 
-    private static Dog generateTestData() {
-        return Dog.builder()
-                .name("Name")
-                .dateOfBirth(LocalDate.now())
-                .height(10)
-                .weight(10)
-                .build();
-    }
 
-    private Dog copyDog(Dog dog) {
-        return Dog.builder()
-                .id(dog.getId())
-                .name(dog.getName())
-                .dateOfBirth(dog.getDateOfBirth())
-                .height(dog.getHeight())
-                .weight(dog.getWeight())
-                .build();
-    }
 }
