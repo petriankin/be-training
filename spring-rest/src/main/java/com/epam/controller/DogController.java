@@ -4,15 +4,14 @@ import com.epam.model.Dog;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping(value = "/dog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogController {
 
-    private static Map<UUID, Dog> dogs = new HashMap<>();
+    private static ConcurrentHashMap<UUID, Dog> dogs = new ConcurrentHashMap<>();
 
     @PostMapping
     public Dog createDog(@RequestBody Dog dog) {
@@ -24,7 +23,7 @@ public class DogController {
 
     @GetMapping("/{id}")
     public Dog getDog(@PathVariable UUID id) {
-        return dogs.getOrDefault(id, new Dog());
+        return dogs.get(id);
     }
 
     @PutMapping("/{id}")
@@ -34,7 +33,7 @@ public class DogController {
 
     @DeleteMapping("/{id}")
     public void deleteDog(@PathVariable UUID id) {
-        dogs.put(id, null);
+        dogs.remove(id);
     }
 
 }
