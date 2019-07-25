@@ -1,39 +1,36 @@
 package com.epam.controller;
 
+import com.epam.dao.JdbcDogDao;
 import com.epam.model.Dog;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping(value = "/dog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogController {
 
-    private static ConcurrentHashMap<UUID, Dog> dogs = new ConcurrentHashMap<>();
+    private JdbcDogDao dao = new JdbcDogDao();
 
     @PostMapping
     public Dog createDog(@RequestBody Dog dog) {
-        UUID id = UUID.randomUUID();
-        dog.setId(id);
-        dogs.put(id, dog);
-        return dog;
+        return dao.createDog(dog);
     }
 
     @GetMapping("/{id}")
     public Dog getDog(@PathVariable UUID id) {
-        return dogs.get(id);
+        return dao.getDog(id);
     }
 
     @PutMapping("/{id}")
     public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog) {
-        return dogs.put(id, dog);
+        return dao.updateDog(id, dog);
     }
 
     @DeleteMapping("/{id}")
     public void deleteDog(@PathVariable UUID id) {
-        dogs.remove(id);
+        dao.deleteDog(id);
     }
 
 }
