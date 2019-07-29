@@ -11,7 +11,11 @@ import java.util.UUID;
 @RequestMapping(value = "/dog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogController {
 
-    private JdbcDogDao dao = new JdbcDogDao();
+    private JdbcDogDao dao;
+
+    public DogController(JdbcDogDao dao) {
+        this.dao = dao;
+    }
 
     @PostMapping
     public Dog createDog(@RequestBody Dog dog) {
