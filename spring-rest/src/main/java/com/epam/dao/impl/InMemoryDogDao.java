@@ -1,12 +1,13 @@
-package com.epam.dao;
+package com.epam.dao.impl;
 
+import com.epam.dao.DogDao;
 import com.epam.model.Dog;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class JdbcDogDao {
+public class InMemoryDogDao implements DogDao {
 
     private static ConcurrentHashMap<UUID, Dog> dogs = new ConcurrentHashMap<>();
 

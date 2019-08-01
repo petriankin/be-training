@@ -1,6 +1,6 @@
 package com.epam.controller;
 
-import com.epam.dao.JdbcDogDao;
+import com.epam.dao.DogDao;
 import com.epam.model.Dog;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,9 @@ import java.util.UUID;
 @RequestMapping(value = "/dog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogController {
 
-    private JdbcDogDao dao;
+    private DogDao dao;
 
-    public DogController(JdbcDogDao dao) {
+    public DogController(DogDao dao) {
         this.dao = dao;
     }
 

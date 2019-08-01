@@ -4,9 +4,12 @@
 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="controller" class="com.epam.controller.DogController">
-        <constructor-arg name="dao" ref="dogDao"/>
+        <constructor-arg name="dao" ref="inMemoryDogDao"/>
     </bean>
 
-    <bean id="dogDao" class="com.epam.dao.JdbcDogDao">
+    <bean id="inMemoryDogDao" class="com.epam.dao.impl.InMemoryDogDao">
     </bean>
+    <bean id="jdbcDogDao" class="com.epam.dao.impl.JdbcDogDao">
+    </bean>
+
 </beans>
