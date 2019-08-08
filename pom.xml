@@ -46,6 +46,7 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
         <!--        test-->
         <dependency>
             <groupId>org.testng</groupId>
@@ -63,6 +64,24 @@
             <artifactId>hamcrest-all</artifactId>
             <version>1.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <!--        validation-->
         <dependency>
             <groupId>javax.validation</groupId>
@@ -104,10 +123,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
+            <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
-            <scope>test</scope>
         </dependency>
+
         <!--web-->
         <dependency>
             <groupId>javax.servlet</groupId>

@@ -1,16 +1,20 @@
 package com.epam.util;
 
 import com.epam.model.Dog;
+import com.github.javafaker.Faker;
 
 import java.time.LocalDate;
 
 public class TestDataUtils {
+
+    private static Faker faker = new Faker();
+
     public static Dog generateTestDog() {
         return Dog.builder()
-                .name("Name")
-                .dateOfBirth(LocalDate.now().minusMonths(1))
-                .height(10)
-                .weight(10)
+                .name(faker.dog().name())
+                .dateOfBirth(LocalDate.now().minusMonths(faker.number().numberBetween(1, 10)))
+                .height(faker.number().numberBetween(1, 10))
+                .weight(faker.number().numberBetween(1, 20))
                 .build();
     }
 
@@ -20,15 +24,5 @@ public class TestDataUtils {
             sb.append("a");
         }
         return sb.toString();
-    }
-
-    public static Dog copyDog(Dog dog) {
-        return Dog.builder()
-                .id(dog.getId())
-                .name(dog.getName())
-                .dateOfBirth(dog.getDateOfBirth())
-                .height(dog.getHeight())
-                .weight(dog.getWeight())
-                .build();
     }
 }

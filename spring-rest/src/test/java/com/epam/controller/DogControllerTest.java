@@ -1,20 +1,58 @@
 package com.epam.controller;
 
+import com.epam.dao.impl.JdbcDogDao;
 import com.epam.model.Dog;
 import com.epam.util.TestDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.testng.Assert.*;
 
 @Test
-@ContextConfiguration(locations = {"classpath:spring-test-config.xml"})
+@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private DogController dogController;
+    @Autowired
+    private JdbcDogDao jdbcDogDao;
+
+    @BeforeClass
+    public void setUp() {
+        try (Connection connection = jdbcDogDao.getDataSource().getConnection()) {
+            Statement statement = connection.createStatement();
+            statement.execute(
+                    "CREATE TABLE IF NOT EXISTS " +
+                            "dog(id UUID default RANDOM_UUID()," +
+                            " name VARCHAR(100) NOT NULL," +
+                            " date_of_birth DATE," +
+                            " height INT NOT NULL," +
+                            " weight INT NOT NULL);"
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterClass
+    public void tearDown() {
+        try (Connection connection = jdbcDogDao.getDataSource().getConnection()) {
+            Statement statement = connection.createStatement();
+            statement.execute(
+                    "DROP TABLE IF EXISTS dog;"
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void testCreateDog() {
@@ -41,20 +79,20 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
+    // FIXME: 8/8/19
     public void testUpdateDog() {
         Dog dog = TestDataUtils.generateTestDog();
-
         Dog createdDog = dogController.createDog(dog);
 
-        Dog copy = TestDataUtils.copyDog(createdDog);
-        copy.setName("Another name");
-        Dog updatedDog = dogController.updateDog(createdDog.getId(), copy);
+        Dog dogToUpdate = TestDataUtils.generateTestDog();
+        dogToUpdate.setId(createdDog.getId());
+        Dog updatedDog = dogController.updateDog(createdDog.getId(), dogToUpdate);
 
-        assertNotEquals(updatedDog.getName(), copy.getName());
-        assertEquals(updatedDog.getId(), copy.getId());
-        assertEquals(updatedDog.getDateOfBirth(), copy.getDateOfBirth());
-        assertEquals(updatedDog.getHeight(), copy.getHeight());
-        assertEquals(updatedDog.getWeight(), copy.getWeight());
+        assertEquals(updatedDog.getId(), dogToUpdate.getId());
+        assertNotEquals(updatedDog.getName(), dogToUpdate.getName());
+        assertNotEquals(updatedDog.getDateOfBirth(), dogToUpdate.getDateOfBirth());
+        assertNotEquals(updatedDog.getHeight(), dogToUpdate.getHeight());
+        assertNotEquals(updatedDog.getWeight(), dogToUpdate.getWeight());
     }
 
     @Test(dependsOnMethods = {"testCreateDog", "testGetDog"})
