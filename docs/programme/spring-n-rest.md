@@ -96,7 +96,7 @@ importing contexts.
 * Learn what Front Controller design pattern is ([link](https://www.baeldung.com/java-front-controller-pattern))
 * Learn what `org.springframework.web.servlet.DispatcherServlet` is and how it's defined in web.xml ([link](https://www.baeldung.com/spring-controllers))
 * Make sure you understand the difference between `DispatcherServlet` and 
-`org.springframework.web.context.ContextLoaderListener`
+`org.springframework.web.context.ContextLoaderListener` ([link](https://howtodoinjava.com/spring-mvc/contextloaderlistener-vs-dispatcherservlet/))
 * Learn the difference between `@RestController` and `@Controller` ([link](https://www.baeldung.com/spring-controller-vs-restcontroller))
 
 # Step 5 - Create REST app 

@@ -2,20 +2,27 @@ package com.epam.controller;
 
 import com.epam.dao.DogDao;
 import com.epam.model.Dog;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping(value = "/dog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogController {
 
-    private DogDao dao;
+    // TODO: 8/1/19 mockmvc and restassured tests
+    // TODO: 8/1/19 provide dependency by tomcat instead of EL import
+    // TODO: 8/1/19 valid annotations and test thaat controlle validates
 
-    public DogController(DogDao dao) {
-        this.dao = dao;
-    }
+    /**
+     * public cache vs private cache
+     *
+     * */
+
+    private DogDao dao;
 
     @PostMapping
     public Dog createDog(@RequestBody Dog dog) {
