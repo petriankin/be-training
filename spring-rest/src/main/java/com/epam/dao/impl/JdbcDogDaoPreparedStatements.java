@@ -1,0 +1,90 @@
+package com.epam.dao.impl;
+
+import com.epam.dao.DogDao;
+import com.epam.model.Dog;
+import lombok.AllArgsConstructor;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import java.sql.*;
+import java.util.UUID;
+
+public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
+
+    public JdbcDogDaoPreparedStatements(DriverManagerDataSource driverManagerDataSource) {
+        super(driverManagerDataSource);
+    }
+
+    @Override
+    public Dog createDog(Dog dog) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            final PreparedStatement preparedStatement = connection
+                    .prepareStatement(
+                            "INSERT INTO dog (id, name, date_of_birth, height, weight) VALUES (?, ?, ?, ?, ?);",
+                            Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setObject(1, dog.getId());
+            preparedStatement.setString(2, dog.getName());
+            preparedStatement.setDate(3, Date.valueOf(dog.getDateOfBirth()));
+            preparedStatement.setInt(4, dog.getHeight());
+            preparedStatement.setInt(5, dog.getWeight());
+
+            int createdRows = preparedStatement.executeUpdate();
+
+            if (createdRows == 0) {
+                throw new SQLException("Failed to create new dog");
+            }
+        }
+        return dog;
+    }
+
+    @Override
+    public Dog getDog(UUID id) throws SQLException {
+        Dog dog;
+
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "select * from dog where id = ?"
+            );
+            preparedStatement.setObject(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            dog = mapDog(resultSet);
+        }
+        return dog;
+    }
+
+    @Override
+    public Dog updateDog(UUID id, Dog dog) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "update dog set NAME = ?, DATE_OF_BIRTH = ?, HEIGHT = ?, WEIGHT = ? where id =?"
+            );
+            preparedStatement.setString(1, dog.getName());
+            preparedStatement.setDate(2, Date.valueOf(dog.getDateOfBirth()));
+            preparedStatement.setInt(3, dog.getHeight());
+            preparedStatement.setInt(4, dog.getWeight());
+            preparedStatement.setObject(5, id);
+
+            int updatedRows = preparedStatement.executeUpdate();
+
+            if (updatedRows == 0) {
+                throw new SQLException(String.format("Failed to update dog with id %s", dog.getId()));
+            }
+        }
+        return dog;
+    }
+
+    @Override
+    public void deleteDog(UUID id) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "delete from dog where id = ?"
+            );
+            preparedStatement.setObject(1, id);
+            int deletedRows = preparedStatement.executeUpdate();
+            if (deletedRows == 0) {
+                throw new SQLException("Failed to delete dog");
+            }
+        }
+    }
+}

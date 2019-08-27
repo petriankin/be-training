@@ -3,22 +3,26 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="controller" class="com.epam.controller.DogController">
-        <constructor-arg name="dao" ref="jdbcDogDao"/>
+    <bean id="dogController" class="com.epam.controller.DogController">
+        <constructor-arg name="dao" ref="daoPreparedStatements"/>
+        <!--        todo switch by profile as run parameter or import context -->
     </bean>
 
+    <!--    dao-->
     <bean id="inMemoryDogDao" class="com.epam.dao.impl.InMemoryDogDao">
     </bean>
-    <bean id="jdbcDogDao" class="com.epam.dao.impl.JdbcDogDao">
+    <bean id="daoPreparedStatements" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">
+        <constructor-arg ref="dataSource"/>
+    </bean>
+    <bean id="daoStatements" class="com.epam.dao.impl.JdbcDogDaoStatements">
         <constructor-arg ref="dataSource"/>
     </bean>
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.h2.Driver"/>
         <property name="url" value="jdbc:h2:file:~/test/db"/>
-<!--        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>-->
+        <!--        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>-->
         <property name="username" value="sa"/>
         <property name="password" value="sa"/>
     </bean>
-    <!--    ;DB_CLOSE_DELAY=-1-->
 </beans>
