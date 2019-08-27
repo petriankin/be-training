@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -25,22 +26,23 @@ public class DogController {
     private DogDao dao;
 
     @PostMapping
-    public Dog createDog(@RequestBody Dog dog) {
+    public Dog createDog(@RequestBody Dog dog) throws SQLException {
+        dog.setId(UUID.randomUUID());
         return dao.createDog(dog);
     }
 
     @GetMapping("/{id}")
-    public Dog getDog(@PathVariable UUID id) {
+    public Dog getDog(@PathVariable UUID id) throws SQLException {
         return dao.getDog(id);
     }
 
     @PutMapping("/{id}")
-    public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog) {
+    public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog) throws SQLException {
         return dao.updateDog(id, dog);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteDog(@PathVariable UUID id) {
+    public void deleteDog(@PathVariable UUID id) throws SQLException {
         dao.deleteDog(id);
     }
 

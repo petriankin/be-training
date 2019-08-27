@@ -12,9 +12,7 @@ public class InMemoryDogDao implements DogDao {
     private static ConcurrentHashMap<UUID, Dog> dogs = new ConcurrentHashMap<>();
 
     public Dog createDog(Dog dog) {
-        UUID id = UUID.randomUUID();
-        dog.setId(id);
-        dogs.put(id, dog);
+        dogs.put(dog.getId(), dog);
         return dog;
     }
 
