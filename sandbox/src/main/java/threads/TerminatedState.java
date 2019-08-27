@@ -7,7 +7,7 @@ public class TerminatedState implements Runnable {
 
     public static void main(String[] args) throws InterruptedException {
         Thread t1 = new Thread(new TerminatedState());
-        Thread.currentThread().getPriority()
+        Thread.currentThread().getPriority();
         t1.start();
 
         // The following sleep method will give enough time for
