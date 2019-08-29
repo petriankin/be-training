@@ -15,7 +15,7 @@ import static org.testng.Assert.assertFalse;
 
 public class DogControllerBeanValidationTest {
 
-    private Validator va1lidator = Validation.buildDefaultValidatorFactory()
+    private Validator validator = Validation.buildDefaultValidatorFactory()
             .getValidator();
 
     // TODO: 7/25/19 positive case test
@@ -25,7 +25,7 @@ public class DogControllerBeanValidationTest {
         Dog dog = TestDataUtils.generateTestDog();
         dog.setName("");
 
-        Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
+        Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
         String message = violations.stream()
                 .findAny()
                 .get()
@@ -40,7 +40,7 @@ public class DogControllerBeanValidationTest {
         Dog dog = TestDataUtils.generateTestDog();
         dog.setName(TestDataUtils.generateLongName());
 
-        Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
+        Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
         String message = violations.stream()
                 .findAny()
                 .get()
@@ -55,7 +55,7 @@ public class DogControllerBeanValidationTest {
         Dog dog = TestDataUtils.generateTestDog();
         dog.setDateOfBirth(LocalDate.now());
 
-        Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
+        Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
         String message = violations.stream()
                 .findAny()
                 .get()
@@ -70,7 +70,7 @@ public class DogControllerBeanValidationTest {
         Dog dog = TestDataUtils.generateTestDog();
         dog.setHeight(0);
 
-        Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
+        Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
         String message = violations.stream()
                 .findAny()
                 .get()
@@ -85,7 +85,7 @@ public class DogControllerBeanValidationTest {
         Dog dog = TestDataUtils.generateTestDog();
         dog.setWeight(0);
 
-        Set<ConstraintViolation<Dog>> violations = va1lidator.validate(dog);
+        Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
         String message = violations.stream()
                 .findAny()
                 .get()

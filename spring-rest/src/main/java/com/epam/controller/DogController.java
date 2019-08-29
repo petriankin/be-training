@@ -1,7 +1,7 @@
 package com.epam.controller;
 
-import com.epam.dao.DogDao;
 import com.epam.model.Dog;
+import com.epam.service.DogService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,34 +16,28 @@ public class DogController {
 
     // TODO: 8/1/19 mockmvc and restassured tests
     // TODO: 8/1/19 provide dependency by tomcat instead of EL import
-    // TODO: 8/1/19 valid annotations and test thaat controlle validates
+    // TODO: 8/1/19 valid annotations and test that controller validates
+    // TODO: 8/28/2019  public cache vs private cache
 
-    /**
-     * public cache vs private cache
-     *
-     * */
-
-    private DogDao dao;
+    private DogService dogService;
 
     @PostMapping
     public Dog createDog(@RequestBody Dog dog) throws SQLException {
-        dog.setId(UUID.randomUUID());
-        return dao.createDog(dog);
+        return dogService.createDog(dog);
     }
 
     @GetMapping("/{id}")
     public Dog getDog(@PathVariable UUID id) throws SQLException {
-        return dao.getDog(id);
+        return dogService.getDog(id);
     }
 
     @PutMapping("/{id}")
     public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog) throws SQLException {
-        return dao.updateDog(id, dog);
+        return dogService.updateDog(id, dog);
     }
 
     @DeleteMapping("/{id}")
     public void deleteDog(@PathVariable UUID id) throws SQLException {
-        dao.deleteDog(id);
+        dogService.deleteDog(id);
     }
-
 }

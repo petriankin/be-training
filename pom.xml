@@ -17,6 +17,11 @@
         <lombok.version>1.18.8</lombok.version>
         <hibernate.version>6.0.2.Final</hibernate.version>
         <jackson.version>2.9.9</jackson.version>
+        <flyway.user>databaseUser</flyway.user>
+        <flyway.password>databasePassword</flyway.password>
+        <flyway.schemas>schemaName</flyway.schemas>
+        <flyway.url>jdbc:h2:file:~/test/db</flyway.url>
+        <flyway.locations>filesystem:db/migration</flyway.locations>
     </properties>
 
     <build>
@@ -29,13 +34,18 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>4.0.3</version>
+            </plugin>
         </plugins>
     </build>
 
     <modules>
         <module>common-model</module>
         <module>spring-rest</module>
-        <module>servlet</module>
+        <!--        <module>servlet</module>-->
         <module>sandbox</module>
     </modules>
 
@@ -45,6 +55,11 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.6</version>
         </dependency>
 
         <!--        test-->
@@ -88,9 +103,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <version>1.0.0</version>
+            <groupId>io.qala.datagen</groupId>
+            <artifactId>qala-datagen</artifactId>
+            <version>2.3.0</version>
         </dependency>
 
         <!--        validation-->
@@ -108,6 +123,11 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator-annotation-processor</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>5.0.3</version>
         </dependency>
         <dependency>
             <groupId>javax.el</groupId>

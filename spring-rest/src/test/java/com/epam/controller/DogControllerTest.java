@@ -1,5 +1,6 @@
 package com.epam.controller;
 
+import com.epam.JdbcConnectionHolder;
 import com.epam.dao.impl.JdbcDogDaoStatements;
 import com.epam.model.Dog;
 import com.epam.util.TestDataUtils;
@@ -24,14 +25,16 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
     private DogController dogController;
     @Autowired
     private JdbcDogDaoStatements jdbcDogDao;
+    @Autowired
+    private JdbcConnectionHolder connectionHolder;
 
     @BeforeClass
     public void setUp() {
-        try (Connection connection = jdbcDogDao.getDataSource().getConnection()) {
+        try (Connection connection = connectionHolder.getConnection()) {
             Statement statement = connection.createStatement();
             statement.execute(
                     "CREATE TABLE IF NOT EXISTS " +
-                            "dog(id UUID default RANDOM_UUID()," +
+                            "dog(id UUID," +
                             " name VARCHAR(100) NOT NULL," +
                             " date_of_birth DATE," +
                             " height INT NOT NULL," +
@@ -44,7 +47,7 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     @AfterClass
     public void tearDown() throws SQLException {
-        try (Connection connection = jdbcDogDao.getDataSource().getConnection()) {
+        try (Connection connection = connectionHolder.getConnection()) {
             Statement statement = connection.createStatement();
             statement.execute(
                     "DROP TABLE IF EXISTS dog;"
@@ -52,28 +55,18 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
         }
     }
 
-
-    // TODO: 8/8/19 get and create should be in one test
     @Test
-    public void testCreateDog() throws SQLException {
+    public void testCreateAndGetDog() throws SQLException {
         Dog dog = TestDataUtils.generateTestDog();
 
         Dog createdDog = dogController.createDog(dog);
-
         assertEquals(createdDog.getName(), dog.getName());
         assertEquals(createdDog.getDateOfBirth(), dog.getDateOfBirth());
         assertEquals(createdDog.getHeight(), dog.getHeight());
         assertEquals(createdDog.getWeight(), dog.getWeight());
         assertNotNull(createdDog.getId());
-    }
 
-    @Test(dependsOnMethods = {"testCreateDog"})
-    public void testGetDog() throws SQLException {
-        Dog dog = TestDataUtils.generateTestDog();
-
-        Dog createdDog = dogController.createDog(dog);
         Dog returnedDog = dogController.getDog(createdDog.getId());
-
         assertNotNull(returnedDog);
         assertEquals(returnedDog, createdDog);
     }
@@ -96,7 +89,7 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
         assertNotEquals(updatedDog.getWeight(), dogToUpdate.getWeight());
     }
 
-    @Test(dependsOnMethods = {"testCreateDog", "testGetDog"})
+    @Test(dependsOnMethods = {"testCreateAndGetDog", "testGetDog"})
     public void testDeleteDog() throws SQLException {
         Dog dog = TestDataUtils.generateTestDog();
 

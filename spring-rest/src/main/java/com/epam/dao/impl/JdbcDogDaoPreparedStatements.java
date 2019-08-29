@@ -1,22 +1,22 @@
 package com.epam.dao.impl;
 
+import com.epam.JdbcConnectionHolder;
 import com.epam.dao.DogDao;
+import com.epam.dao.JdbcDogDao;
 import com.epam.model.Dog;
-import lombok.AllArgsConstructor;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.sql.*;
 import java.util.UUID;
 
 public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
-    public JdbcDogDaoPreparedStatements(DriverManagerDataSource driverManagerDataSource) {
-        super(driverManagerDataSource);
+    public JdbcDogDaoPreparedStatements(JdbcConnectionHolder connectionHolder) {
+        super(connectionHolder);
     }
 
     @Override
     public Dog createDog(Dog dog) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = connectionHolder.getConnection()) {
             final PreparedStatement preparedStatement = connection
                     .prepareStatement(
                             "INSERT INTO dog (id, name, date_of_birth, height, weight) VALUES (?, ?, ?, ?, ?);",
@@ -41,7 +41,7 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
     public Dog getDog(UUID id) throws SQLException {
         Dog dog;
 
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = connectionHolder.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "select * from dog where id = ?"
             );
@@ -55,7 +55,7 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
     @Override
     public Dog updateDog(UUID id, Dog dog) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = connectionHolder.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update dog set NAME = ?, DATE_OF_BIRTH = ?, HEIGHT = ?, WEIGHT = ? where id =?"
             );
@@ -76,7 +76,7 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
     @Override
     public void deleteDog(UUID id) throws SQLException {
-        try (Connection connection = dataSource.getConnection()) {
+        try (Connection connection = connectionHolder.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "delete from dog where id = ?"
             );

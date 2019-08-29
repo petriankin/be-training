@@ -3,26 +3,46 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <!--        todo switch by profile as run parameter or import context -->
     <bean id="dogController" class="com.epam.controller.DogController">
-        <constructor-arg name="dao" ref="daoPreparedStatements"/>
-        <!--        todo switch by profile as run parameter or import context -->
+        <constructor-arg name="dogService" ref="dogService"/>
+    </bean>
+
+    <!--    service-->
+    <bean id="dogService" class="com.epam.service.DogService">
+        <constructor-arg name="dogDao" ref="daoPreparedStatements"/>
     </bean>
 
     <!--    dao-->
-    <bean id="inMemoryDogDao" class="com.epam.dao.impl.InMemoryDogDao">
+    <bean id="daoInMemory" class="com.epam.dao.impl.InMemoryDogDao">
     </bean>
     <bean id="daoPreparedStatements" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">
-        <constructor-arg ref="dataSource"/>
+        <constructor-arg ref="connectionHolder"/>
     </bean>
     <bean id="daoStatements" class="com.epam.dao.impl.JdbcDogDaoStatements">
-        <constructor-arg ref="dataSource"/>
+        <constructor-arg ref="connectionHolder"/>
     </bean>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <!--    db-->
+    <bean id="connectionHolder" class="com.epam.JdbcConnectionHolder">
+        <constructor-arg ref="dataSourceH2"/>
+    </bean>
+    <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+        <property name="baselineOnMigrate" value="true"/>
+        <property name="locations" value="classpath:/db/migrations"/>
+        <property name="dataSource" ref="dataSourcePostgres"/>
+    </bean>
+    <bean id="dataSourceH2" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.h2.Driver"/>
         <property name="url" value="jdbc:h2:file:~/test/db"/>
         <!--        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>-->
         <property name="username" value="sa"/>
         <property name="password" value="sa"/>
+    </bean>
+    <bean name="dataSourcePostgres" class="org.postgresql.ds.PGSimpleDataSource">
+        <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
+        <property name="user" value="postgres"/>
+        <property name="password" value="postgres"/>
+        <property name="prepareThreshold" value="1"/>
     </bean>
 </beans>
