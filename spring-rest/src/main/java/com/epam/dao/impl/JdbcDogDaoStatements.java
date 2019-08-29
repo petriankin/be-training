@@ -27,7 +27,7 @@ public class JdbcDogDaoStatements extends JdbcDogDao implements DogDao {
             ));
 
             if (createdRows == 0) {
-                throw new SQLException("Failed to create new dog");
+                throw new RuntimeException("Failed to create new dog");
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

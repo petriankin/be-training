@@ -72,7 +72,7 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
             int updatedRows = preparedStatement.executeUpdate();
 
             if (updatedRows == 0) {
-                throw new SQLException(String.format("Failed to update dog with id %s", dog.getId()));
+                throw new RuntimeException(String.format("Failed to update dog with id %s", dog.getId()));
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -90,7 +90,7 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
             preparedStatement.setObject(1, id);
             int deletedRows = preparedStatement.executeUpdate();
             if (deletedRows == 0) {
-                throw new SQLException("Failed to delete dog");
+                throw new RuntimeException("Failed to delete dog");
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
