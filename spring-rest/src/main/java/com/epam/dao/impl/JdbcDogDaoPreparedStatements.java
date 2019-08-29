@@ -15,7 +15,7 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
     }
 
     @Override
-    public Dog createDog(Dog dog) throws SQLException {
+    public Dog createDog(Dog dog) {
         try (Connection connection = connectionHolder.getConnection()) {
             final PreparedStatement preparedStatement = connection
                     .prepareStatement(
@@ -31,15 +31,17 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
             int createdRows = preparedStatement.executeUpdate();
 
             if (createdRows == 0) {
-                throw new SQLException("Failed to create new dog");
+                throw new RuntimeException("Failed to create new dog");
             }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
         return dog;
     }
 
     @Override
-    public Dog getDog(UUID id) throws SQLException {
-        Dog dog;
+    public Dog getDog(UUID id) {
+        Dog dog = null;
 
         try (Connection connection = connectionHolder.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -49,12 +51,14 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             dog = mapDog(resultSet);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
         return dog;
     }
 
     @Override
-    public Dog updateDog(UUID id, Dog dog) throws SQLException {
+    public Dog updateDog(UUID id, Dog dog) {
         try (Connection connection = connectionHolder.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update dog set NAME = ?, DATE_OF_BIRTH = ?, HEIGHT = ?, WEIGHT = ? where id =?"
@@ -70,12 +74,15 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
             if (updatedRows == 0) {
                 throw new SQLException(String.format("Failed to update dog with id %s", dog.getId()));
             }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
+
         return dog;
     }
 
     @Override
-    public void deleteDog(UUID id) throws SQLException {
+    public void deleteDog(UUID id) {
         try (Connection connection = connectionHolder.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "delete from dog where id = ?"
@@ -85,6 +92,8 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
             if (deletedRows == 0) {
                 throw new SQLException("Failed to delete dog");
             }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

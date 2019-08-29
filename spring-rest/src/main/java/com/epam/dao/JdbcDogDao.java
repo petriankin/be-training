@@ -14,6 +14,7 @@ public class JdbcDogDao {
 
     protected JdbcConnectionHolder connectionHolder;
 
+    // TODO: 8/29/2019 move to some util and reduce class hierarchy
     public Dog mapDog(ResultSet resultSet) throws SQLException {
         Dog dog = null;
         if (resultSet.next()) {
