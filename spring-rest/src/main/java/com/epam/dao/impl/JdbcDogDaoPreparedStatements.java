@@ -16,7 +16,7 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
     @Override
     public Dog createDog(Dog dog) {
-        try (Connection connection = connectionHolder.getConnection()) {
+        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             final PreparedStatement preparedStatement = connection
                     .prepareStatement(
                             "INSERT INTO dog (id, name, date_of_birth, height, weight) VALUES (?, ?, ?, ?, ?);",
@@ -30,11 +30,13 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
             int createdRows = preparedStatement.executeUpdate();
 
+            connectionHolder.commit();
+            
             if (createdRows == 0) {
                 throw new RuntimeException("Failed to create new dog");
             }
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            connectionHolder.rollback();
         }
         return dog;
     }
@@ -43,23 +45,25 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
     public Dog getDog(UUID id) {
         Dog dog = null;
 
-        try (Connection connection = connectionHolder.getConnection()) {
+        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "select * from dog where id = ?"
             );
             preparedStatement.setObject(1, id);
+
             ResultSet resultSet = preparedStatement.executeQuery();
+            connectionHolder.commit();
 
             dog = mapDog(resultSet);
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            connectionHolder.rollback();
         }
         return dog;
     }
 
     @Override
     public Dog updateDog(UUID id, Dog dog) {
-        try (Connection connection = connectionHolder.getConnection()) {
+        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update dog set NAME = ?, DATE_OF_BIRTH = ?, HEIGHT = ?, WEIGHT = ? where id =?"
             );
@@ -71,11 +75,13 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
             int updatedRows = preparedStatement.executeUpdate();
 
+            connectionHolder.commit();
+            
             if (updatedRows == 0) {
                 throw new RuntimeException(String.format("Failed to update dog with id %s", dog.getId()));
             }
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            connectionHolder.rollback();
         }
 
         return dog;
@@ -83,17 +89,21 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
     @Override
     public void deleteDog(UUID id) {
-        try (Connection connection = connectionHolder.getConnection()) {
+        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "delete from dog where id = ?"
             );
             preparedStatement.setObject(1, id);
+
             int deletedRows = preparedStatement.executeUpdate();
+
+            connectionHolder.commit();
+            
             if (deletedRows == 0) {
                 throw new RuntimeException("Failed to delete dog");
             }
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            connectionHolder.rollback();
         }
     }
 }
