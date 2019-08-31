@@ -30,7 +30,7 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     @BeforeClass
     public void setUp() {
-        try (Connection connection = connectionHolder.getConnection()) {
+        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             Statement statement = connection.createStatement();
             statement.execute(
                     "CREATE TABLE IF NOT EXISTS " +
@@ -47,7 +47,7 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     @AfterClass
     public void tearDown() throws SQLException {
-        try (Connection connection = connectionHolder.getConnection()) {
+        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             Statement statement = connection.createStatement();
             statement.execute(
                     "DROP TABLE IF EXISTS dog;"
