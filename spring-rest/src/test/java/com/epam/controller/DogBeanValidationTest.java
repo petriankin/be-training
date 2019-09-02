@@ -10,15 +10,21 @@ import javax.validation.Validator;
 import java.time.LocalDate;
 import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class DogControllerBeanValidationTest {
+public class DogBeanValidationTest {
 
     private Validator validator = Validation.buildDefaultValidatorFactory()
             .getValidator();
 
-    // TODO: 7/25/19 positive case test
+    @Test
+    public void whenAllFieldsAreValid_validationPassed() {
+        Dog dog = TestDataUtils.generateTestDog();
+
+        Set<ConstraintViolation<Dog>> violations = validator.validate(dog);
+
+        assertThat(violations).isEmpty();
+    }
 
     @Test
     public void whenNameIsLessThan1SymbolLong_validationFailed() {
@@ -31,8 +37,8 @@ public class DogControllerBeanValidationTest {
                 .get()
                 .getMessage();
 
-        assertFalse(violations.isEmpty());
-        assertEquals(message, "Name must be between 1 and 100 symbols long");
+        assertThat(violations).isNotEmpty();
+        assertThat(message).isEqualToIgnoringCase("Name must be between 1 and 100 symbols long");
     }
 
     @Test
@@ -46,8 +52,8 @@ public class DogControllerBeanValidationTest {
                 .get()
                 .getMessage();
 
-        assertFalse(violations.isEmpty());
-        assertEquals(message, "Name must be between 1 and 100 symbols long");
+        assertThat(violations).isNotEmpty();
+        assertThat(message).isEqualToIgnoringCase("Name must be between 1 and 100 symbols long");
     }
 
     @Test
@@ -61,8 +67,8 @@ public class DogControllerBeanValidationTest {
                 .get()
                 .getMessage();
 
-        assertFalse(violations.isEmpty());
-        assertEquals(message, "Date of Birth must be in the past");
+        assertThat(violations).isNotEmpty();
+        assertThat(message).isEqualToIgnoringCase("Date of Birth must be in the past");
     }
 
     @Test
@@ -76,8 +82,8 @@ public class DogControllerBeanValidationTest {
                 .get()
                 .getMessage();
 
-        assertFalse(violations.isEmpty());
-        assertEquals(message, "Height must be greater than zero");
+        assertThat(violations).isNotEmpty();
+        assertThat(message).isEqualToIgnoringCase("Height must be greater than zero");
     }
 
     @Test
@@ -91,9 +97,7 @@ public class DogControllerBeanValidationTest {
                 .get()
                 .getMessage();
 
-        assertFalse(violations.isEmpty());
-        assertEquals(message, "Weight must be greater than zero");
+        assertThat(violations).isNotEmpty();
+        assertThat(message).isEqualToIgnoringCase("Weight must be greater than zero");
     }
-
-
 }
