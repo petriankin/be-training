@@ -14,9 +14,8 @@ import java.util.UUID;
 @RequestMapping(value = "/dog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogController {
 
-    // TODO: 8/1/19 mockmvc and restassured tests
+    // TODO: 8/1/19 mockmvc and restassured tests, valid annotations and test that controller validates
     // TODO: 8/1/19 provide dependency by tomcat instead of EL import
-    // TODO: 8/1/19 valid annotations and test that controller validates
     // TODO: 8/28/2019  public cache vs private cache
     // TODO: 8/29/2019 make custom exception
 
