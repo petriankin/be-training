@@ -30,20 +30,18 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
             int createdRows = preparedStatement.executeUpdate();
 
-            connectionHolder.commit();
-            
             if (createdRows == 0) {
                 throw new RuntimeException("Failed to create new dog");
             }
         } catch (SQLException ex) {
-            connectionHolder.rollback();
+            throw new RuntimeException(ex);
         }
         return dog;
     }
 
     @Override
     public Dog getDog(UUID id) {
-        Dog dog = null;
+        Dog dog;
 
         try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -52,11 +50,10 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
             preparedStatement.setObject(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            connectionHolder.commit();
 
             dog = mapDog(resultSet);
         } catch (SQLException ex) {
-            connectionHolder.rollback();
+            throw new RuntimeException(ex);
         }
         return dog;
     }
@@ -75,13 +72,11 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
             int updatedRows = preparedStatement.executeUpdate();
 
-            connectionHolder.commit();
-            
             if (updatedRows == 0) {
                 throw new RuntimeException(String.format("Failed to update dog with id %s", dog.getId()));
             }
         } catch (SQLException ex) {
-            connectionHolder.rollback();
+            throw new RuntimeException(ex);
         }
 
         return dog;
@@ -97,13 +92,11 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
             int deletedRows = preparedStatement.executeUpdate();
 
-            connectionHolder.commit();
-            
             if (deletedRows == 0) {
                 throw new RuntimeException("Failed to delete dog");
             }
         } catch (SQLException ex) {
-            connectionHolder.rollback();
+            throw new RuntimeException(ex);
         }
     }
 }
