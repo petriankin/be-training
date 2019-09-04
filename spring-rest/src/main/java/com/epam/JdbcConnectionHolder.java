@@ -15,8 +15,8 @@ public class JdbcConnectionHolder {
 
     public Connection getConnectionWithNoAutoCommit() throws SQLException {
         if (connectionThreadLocal.get() == null
-                || connectionThreadLocal.get().isClosed()) {
-            Connection connection = dataSource.getConnection();
+                    || connectionThreadLocal.get().isClosed()) {
+                Connection connection = dataSource.getConnection();
             connection.setAutoCommit(false);
             connectionThreadLocal.set(connection);
         }
