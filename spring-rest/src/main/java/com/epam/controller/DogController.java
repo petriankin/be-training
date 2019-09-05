@@ -1,12 +1,11 @@
 package com.epam.controller;
 
 import com.epam.model.Dog;
-import com.epam.service.DogService;
+import com.epam.service.TransactionalDogService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -19,25 +18,25 @@ public class DogController {
     // TODO: 8/28/2019  public cache vs private cache
     // TODO: 8/29/2019 make custom exception
 
-    private DogService dogService;
+    private TransactionalDogService dogService;
 
     @PostMapping
-    public Dog createDog(@RequestBody Dog dog)  {
+    public Dog createDog(@RequestBody Dog dog) {
         return dogService.createDog(dog);
     }
 
     @GetMapping("/{id}")
-    public Dog getDog(@PathVariable UUID id)  {
+    public Dog getDog(@PathVariable UUID id) {
         return dogService.getDog(id);
     }
 
     @PutMapping("/{id}")
-    public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog)  {
+    public Dog updateDog(@PathVariable UUID id, @RequestBody Dog dog) {
         return dogService.updateDog(id, dog);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteDog(@PathVariable UUID id)  {
+    public void deleteDog(@PathVariable UUID id) {
         dogService.deleteDog(id);
     }
 }

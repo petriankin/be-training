@@ -24,7 +24,7 @@
 
     <beans>
         <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="dogService"/>
+            <constructor-arg name="dogService" ref="transactionalDogService"/>
         </bean>
         <bean id="transactionalDogService" class="com.epam.service.TransactionalDogService">
             <constructor-arg name="dogService" ref="dogService"/>
