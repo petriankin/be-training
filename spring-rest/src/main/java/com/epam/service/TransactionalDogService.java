@@ -1,13 +1,14 @@
 package com.epam.service;
 
 import com.epam.JdbcConnectionHolder;
-import com.epam.dao.DogDao;
 import com.epam.model.Dog;
+import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
 
+@AllArgsConstructor
 public class TransactionalDogService {
 
     private DogService dogService;
