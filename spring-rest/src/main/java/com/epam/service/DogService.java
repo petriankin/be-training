@@ -1,30 +1,15 @@
 package com.epam.service;
 
-import com.epam.dao.DogDao;
 import com.epam.model.Dog;
-import lombok.AllArgsConstructor;
 
 import java.util.UUID;
 
-@AllArgsConstructor
-public class DogService {
+public interface DogService {
+    Dog createDog(Dog dog);
 
-    private DogDao dogDao;
+    Dog getDog(UUID id);
 
-    public Dog createDog(Dog dog) {
-        dog.setId(UUID.randomUUID());
-        return dogDao.createDog(dog);
-    }
+    Dog updateDog(UUID id, Dog dog);
 
-    public Dog getDog(UUID id) {
-        return dogDao.getDog(id);
-    }
-
-    public Dog updateDog(UUID id, Dog dog) {
-        return dogDao.updateDog(id, dog);
-    }
-
-    public void deleteDog(UUID id) {
-        dogDao.deleteDog(id);
-    }
+    void deleteDog(UUID id);
 }

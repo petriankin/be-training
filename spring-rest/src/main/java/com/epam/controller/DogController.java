@@ -1,7 +1,7 @@
 package com.epam.controller;
 
 import com.epam.model.Dog;
-import com.epam.service.TransactionalDogService;
+import com.epam.service.DogService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +18,7 @@ public class DogController {
     // TODO: 8/28/2019  public cache vs private cache
     // TODO: 8/29/2019 make custom exception
 
-    private TransactionalDogService dogService;
+    private DogService dogService;
 
     @PostMapping
     public Dog createDog(@RequestBody Dog dog) {

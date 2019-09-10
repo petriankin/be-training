@@ -1,6 +1,7 @@
 package com.epam.service;
 
 import com.epam.JdbcConnectionHolder;
+import com.epam.dao.DogDao;
 import com.epam.model.Dog;
 import lombok.AllArgsConstructor;
 
@@ -9,9 +10,9 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 @AllArgsConstructor
-public class TransactionalDogService {
+public class TransactionalDogServiceImpl implements DogService {
 
-    private DogService dogService;
+    private DogServiceImpl dogService;
     protected JdbcConnectionHolder connectionHolder;
 
     public Dog createDog(Dog dog) {
@@ -20,7 +21,7 @@ public class TransactionalDogService {
             createdDog = dogService.createDog(dog);
             connectionHolder.commit();
         } catch (SQLException e) {
-
+            throw new RuntimeException(e);
         }
         return createdDog;
     }
@@ -31,6 +32,7 @@ public class TransactionalDogService {
             dog = dogService.getDog(id);
         } catch (SQLException e) {
             connectionHolder.rollback();
+            throw new RuntimeException(e);
         }
         return dog;
     }
@@ -41,6 +43,7 @@ public class TransactionalDogService {
             dog1 = dogService.updateDog(id, dog);
         } catch (SQLException e) {
             connectionHolder.rollback();
+            throw new RuntimeException(e);
         }
         return dog1;
     }
@@ -50,6 +53,7 @@ public class TransactionalDogService {
             dogService.deleteDog(id);
         } catch (SQLException e) {
             connectionHolder.rollback();
+            throw new RuntimeException(e);
         }
     }
 

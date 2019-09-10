@@ -1,7 +1,6 @@
-package com.epam.controller;
+package com.epam.service;
 
 import com.epam.model.Dog;
-import com.epam.service.TransactionalDogService;
 import com.epam.util.TestDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DogServiceTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private TransactionalDogService dogService;
+    private TransactionalDogServiceImpl dogService;
 
     @Test
     public void testCreateAndGetDog() {

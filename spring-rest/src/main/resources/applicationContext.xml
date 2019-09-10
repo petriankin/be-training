@@ -3,34 +3,40 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <beans profile="dev">
+    <!--    <beans profile="dev">-->
+    <!--        <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">-->
+    <!--            <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>-->
+    <!--            <property name="user" value="postgres"/>-->
+    <!--            <property name="password" value="postgres"/>-->
+    <!--            <property name="prepareThreshold" value="1"/>-->
+    <!--        </bean>-->
+    <!--    </beans>-->
+
+    <!--    <beans profile="test">-->
+    <!--        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+    <!--            <property name="driverClassName" value="org.h2.Driver"/>-->
+    <!--            <property name="url" value="jdbc:h2:file:~/test/db"/>-->
+    <!--            &lt;!&ndash;        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>&ndash;&gt;-->
+    <!--            <property name="username" value="sa"/>-->
+    <!--            <property name="password" value="sa"/>-->
+    <!--        </bean>-->
+    <!--    </beans>-->
+
+    <beans>
         <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
             <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
             <property name="user" value="postgres"/>
             <property name="password" value="postgres"/>
             <property name="prepareThreshold" value="1"/>
         </bean>
-    </beans>
-
-    <beans profile="test">
-        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-            <property name="driverClassName" value="org.h2.Driver"/>
-            <property name="url" value="jdbc:h2:file:~/test/db"/>
-            <!--        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>-->
-            <property name="username" value="sa"/>
-            <property name="password" value="sa"/>
-        </bean>
-    </beans>
-
-    <beans>
         <bean id="dogController" class="com.epam.controller.DogController">
             <constructor-arg name="dogService" ref="transactionalDogService"/>
         </bean>
-        <bean id="transactionalDogService" class="com.epam.service.TransactionalDogService">
+        <bean id="transactionalDogService" class="com.epam.service.TransactionalDogServiceImpl">
             <constructor-arg name="dogService" ref="dogService"/>
             <constructor-arg name="connectionHolder" ref="connectionHolder"/>
         </bean>
-        <bean id="dogService" class="com.epam.service.DogService">
+        <bean id="dogService" class="com.epam.service.DogServiceImpl">
             <constructor-arg name="dogDao" ref="dogDao"/>
         </bean>
         <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">
