@@ -16,7 +16,8 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
     @Override
     public Dog createDog(Dog dog) {
-        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
+        try {
+            Connection connection = connectionHolder.getConnectionWithNoAutoCommit();
             final PreparedStatement preparedStatement = connection
                     .prepareStatement(
                             "INSERT INTO dog (id, name, date_of_birth, height, weight) VALUES (?, ?, ?, ?, ?);",
@@ -43,7 +44,8 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
     public Dog getDog(UUID id) {
         Dog dog;
 
-        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
+        try {
+            Connection connection = connectionHolder.getConnectionWithNoAutoCommit();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "select * from dog where id = ?"
             );
@@ -60,7 +62,8 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
     @Override
     public Dog updateDog(UUID id, Dog dog) {
-        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
+        try {
+            Connection connection = connectionHolder.getConnectionWithNoAutoCommit();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update dog set NAME = ?, DATE_OF_BIRTH = ?, HEIGHT = ?, WEIGHT = ? where id =?"
             );
@@ -84,7 +87,8 @@ public class JdbcDogDaoPreparedStatements extends JdbcDogDao implements DogDao {
 
     @Override
     public void deleteDog(UUID id) {
-        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
+        try {
+            Connection connection = connectionHolder.getConnectionWithNoAutoCommit();
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "delete from dog where id = ?"
             );

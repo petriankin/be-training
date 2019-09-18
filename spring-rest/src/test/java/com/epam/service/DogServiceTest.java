@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DogServiceTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
-    private TransactionalDogServiceImpl dogService;
+    private DogService dogService;
 
     @Test
     public void testCreateAndGetDog() {

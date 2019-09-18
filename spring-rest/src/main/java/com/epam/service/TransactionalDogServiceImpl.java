@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TransactionalDogServiceImpl implements DogService {
 
-    private DogServiceImpl dogService;
+    private DogService dogService;
     protected JdbcConnectionHolder connectionHolder;
 
     public Dog createDog(Dog dog) {
