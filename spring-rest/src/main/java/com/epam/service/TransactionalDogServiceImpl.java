@@ -1,7 +1,6 @@
 package com.epam.service;
 
 import com.epam.JdbcConnectionHolder;
-import com.epam.dao.DogDao;
 import com.epam.model.Dog;
 import lombok.AllArgsConstructor;
 
@@ -17,22 +16,32 @@ public class TransactionalDogServiceImpl implements DogService {
 
     public Dog createDog(Dog dog) {
         Dog createdDog = null;
-        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
+
+        try {
+            connectionHolder.startTransaction();
             createdDog = dogService.createDog(dog);
-            connectionHolder.commit();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            connectionHolder.commitTransaction();
+        } catch (Exception e) {
+            connectionHolder.rollbackTransaction();
         }
+        finally {
+            connectionHolder.closeConnection();
+        }
+
         return createdDog;
     }
 
     public Dog getDog(UUID id) {
         Dog dog = null;
-        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
+        try  {
+            connectionHolder.startTransaction();
             dog = dogService.getDog(id);
-        } catch (SQLException e) {
-            connectionHolder.rollback();
-            throw new RuntimeException(e);
+            connectionHolder.commitTransaction();
+        } catch (Exception e) {
+            connectionHolder.rollbackTransaction();
+        }
+        finally {
+            connectionHolder.closeConnection();
         }
         return dog;
     }
@@ -42,7 +51,7 @@ public class TransactionalDogServiceImpl implements DogService {
         try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             dog1 = dogService.updateDog(id, dog);
         } catch (SQLException e) {
-            connectionHolder.rollback();
+            connectionHolder.rollbackTransaction();
             throw new RuntimeException(e);
         }
         return dog1;
@@ -52,7 +61,7 @@ public class TransactionalDogServiceImpl implements DogService {
         try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
             dogService.deleteDog(id);
         } catch (SQLException e) {
-            connectionHolder.rollback();
+            connectionHolder.rollbackTransaction();
             throw new RuntimeException(e);
         }
     }

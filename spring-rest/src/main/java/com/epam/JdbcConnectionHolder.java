@@ -31,35 +31,35 @@ public class JdbcConnectionHolder {
         return connectionThreadLocal.get();
     }
 
-    public void commit() {
+    public void startTransaction() {
+        try {
+            getConnectionWithNoAutoCommit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void commitTransaction() {
         try {
             getConnectionWithNoAutoCommit().commit();
         } catch (SQLException e) {
             throw  new RuntimeException(e);
         }
-//        Connection connection = this.connectionThreadLocal.get();
-//        if (connection != null) {
-//            try {
-//                connection.commit();
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
     }
 
-    public void rollback() {
+    public void rollbackTransaction() {
         try {
             getConnectionWithNoAutoCommit().rollback();
         } catch (SQLException e) {
             throw  new RuntimeException(e);
         }
-//        Connection connection = this.connectionThreadLocal.get();
-//        if (connection != null) {
-//            try {
-//                connection.rollback();
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+    }
+
+    public void closeConnection() {
+        try {
+            getConnectionWithAutoCommit().close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
