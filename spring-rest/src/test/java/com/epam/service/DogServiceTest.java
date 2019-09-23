@@ -1,10 +1,12 @@
 package com.epam.service;
 
+import com.epam.controller.DogController;
 import com.epam.model.Dog;
 import com.epam.util.TestDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,28 +15,35 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class DogServiceTest extends AbstractTestNGSpringContextTests {
 
+//    @Autowired
+//    TransactionProxyFactoryBean transactionProxyFactoryBean;
     @Autowired
-    private DogService dogService;
+    private DogController dogController;
+
+//    @BeforeClass
+//    private void init() {
+//        dogController = transactionProxyFactoryBean.getObject();
+//    }
 
     @Test
     public void testCreateAndGetDog() {
         Dog dog = TestDataUtils.generateTestDog();
 
-        Dog createdDog = dogService.createDog(dog);
+        Dog createdDog = dogController.createDog(dog);
         assertThat(createdDog).isEqualToIgnoringGivenFields(dog, "id");
         assertThat(createdDog).extracting("id").isNotNull();
 
-        Dog returnedDog = dogService.getDog(createdDog.getId());
+        Dog returnedDog = dogController.getDog(createdDog.getId());
         assertThat(returnedDog).isEqualToComparingFieldByField(createdDog);
     }
 
     @Test
     public void testUpdateDog() {
         Dog dogToCreate = TestDataUtils.generateTestDog();
-        Dog createdDog = dogService.createDog(dogToCreate);
+        Dog createdDog = dogController.createDog(dogToCreate);
 
         Dog dogToUpdate = TestDataUtils.generateTestDog();
-        Dog updatedDog = dogService.updateDog(createdDog.getId(), dogToUpdate);
+        Dog updatedDog = dogController.updateDog(createdDog.getId(), dogToUpdate);
 
         assertThat(createdDog).isNotEqualTo(updatedDog);
         assertThat(updatedDog).isEqualToIgnoringGivenFields(dogToUpdate, "id");
@@ -44,10 +53,10 @@ public class DogServiceTest extends AbstractTestNGSpringContextTests {
     public void testDeleteDog() {
         Dog dog = TestDataUtils.generateTestDog();
 
-        Dog createdDog = dogService.createDog(dog);
+        Dog createdDog = dogController.createDog(dog);
 
-        dogService.deleteDog(createdDog.getId());
+        dogController.deleteDog(createdDog.getId());
 
-        assertThat(dogService.getDog(createdDog.getId())).isNull();
+        assertThat(dogController.getDog(createdDog.getId())).isNull();
     }
 }

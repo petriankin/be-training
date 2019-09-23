@@ -30,13 +30,20 @@
             <property name="prepareThreshold" value="1"/>
         </bean>
         <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="transactionalDogService"/>
+            <constructor-arg name="factoryBean" ref="transactionProxyFactoryBean"/>
         </bean>
         <bean id="transactionalDogService" class="com.epam.service.TransactionalDogServiceImpl">
-            <constructor-arg name="dogService" ref="dogService"/>
+            <constructor-arg name="dogService" ref="dogServiceImpl"/>
             <constructor-arg name="connectionHolder" ref="connectionHolder"/>
         </bean>
-        <bean id="dogService" class="com.epam.service.DogServiceImpl">
+        <bean id="transactionProxyFactoryBean" class="com.epam.service.TransactionProxyFactoryBean">
+            <constructor-arg name="transactionalProxy" ref="transactionalProxy"/>
+        </bean>
+        <bean id="transactionalProxy" class="com.epam.service.TransactionalProxy">
+            <constructor-arg name="connectionHolder" ref="connectionHolder"/>
+            <constructor-arg name="dogService" ref="dogServiceImpl"/>
+        </bean>
+        <bean id="dogServiceImpl" class="com.epam.service.DogServiceImpl">
             <constructor-arg name="dogDao" ref="dogDao"/>
         </bean>
         <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">

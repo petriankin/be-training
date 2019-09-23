@@ -2,13 +2,12 @@ package com.epam.controller;
 
 import com.epam.model.Dog;
 import com.epam.service.DogService;
-import lombok.AllArgsConstructor;
+import com.epam.service.TransactionProxyFactoryBean;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping(value = "/dog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DogController {
@@ -17,8 +16,13 @@ public class DogController {
     // TODO: 8/1/19 provide dependency by tomcat instead of EL import
     // TODO: 8/28/2019  public cache vs private cache
     // TODO: 8/29/2019 make custom exception
+    // TODO: 9/19/2019 anonymous bean, do not declare beans if we do not need it why dont's use component scan?
 
     private DogService dogService;
+
+    public DogController(TransactionProxyFactoryBean factoryBean) {
+        this.dogService = factoryBean.getObject();
+    }
 
     @PostMapping
     public Dog createDog(@RequestBody Dog dog) {
