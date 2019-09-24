@@ -79,7 +79,7 @@ services that need to be wrapped with transactions. So the amount of duplication
 
 JDK Proxy is good but it works only when your classes have interfaces. What if they don't?
 
-- Research how to create dynamic proxies with CGLIB
+- Research how to create dynamic proxies with ([CGLIB](https://www.baeldung.com/cglib))
 - Add CGLIB to your classpath and create a new `CglibTransactionalDogService`. Try removing your interface and use 
 the new proxy for transaction management.
 - Think & research: how is the CGLIB mechanism different from JDK Proxy?
