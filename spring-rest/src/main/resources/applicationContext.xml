@@ -30,7 +30,7 @@
             <property name="prepareThreshold" value="1"/>
         </bean>
         <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="factoryBean" ref="transactionProxyFactoryBean"/>
+            <constructor-arg name="transactionalProxy" ref="transactionalProxy"/>
         </bean>
         <bean id="transactionalDogService" class="com.epam.service.TransactionalDogServiceImpl">
             <constructor-arg name="dogService" ref="dogServiceImpl"/>

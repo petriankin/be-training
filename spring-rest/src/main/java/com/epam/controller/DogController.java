@@ -3,6 +3,7 @@ package com.epam.controller;
 import com.epam.model.Dog;
 import com.epam.service.DogService;
 import com.epam.service.TransactionProxyFactoryBean;
+import com.epam.service.TransactionalProxy;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,8 @@ public class DogController {
 
     private DogService dogService;
 
-    public DogController(TransactionProxyFactoryBean factoryBean) {
-        this.dogService = factoryBean.getObject();
+    public DogController(TransactionalProxy transactionalProxy) {
+        this.dogService =new TransactionProxyFactoryBean(transactionalProxy).getObject();
     }
 
     @PostMapping
