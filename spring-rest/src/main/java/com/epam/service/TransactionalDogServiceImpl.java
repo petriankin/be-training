@@ -23,8 +23,7 @@ public class TransactionalDogServiceImpl implements DogService {
             connectionHolder.commitTransaction();
         } catch (Exception e) {
             connectionHolder.rollbackTransaction();
-        }
-        finally {
+        } finally {
             connectionHolder.closeConnection();
         }
 
@@ -33,14 +32,13 @@ public class TransactionalDogServiceImpl implements DogService {
 
     public Dog getDog(UUID id) {
         Dog dog = null;
-        try  {
+        try {
             connectionHolder.startTransaction();
             dog = dogService.getDog(id);
             connectionHolder.commitTransaction();
         } catch (Exception e) {
             connectionHolder.rollbackTransaction();
-        }
-        finally {
+        } finally {
             connectionHolder.closeConnection();
         }
         return dog;

@@ -14,7 +14,17 @@ public class TransactionalProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-        return null;
+        Object result;
+        try {
+            connectionHolder.startTransaction();
+            result = method.invoke(dogService, args);
+            connectionHolder.commitTransaction();
+        } catch (Exception e) {
+            connectionHolder.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            connectionHolder.closeConnection();
+        }
+        return result;
     }
 }
