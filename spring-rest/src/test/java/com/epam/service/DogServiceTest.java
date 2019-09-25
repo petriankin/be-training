@@ -6,7 +6,6 @@ import com.epam.util.TestDataUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,15 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class DogServiceTest extends AbstractTestNGSpringContextTests {
 
-//    @Autowired
-//    TransactionProxyFactoryBean transactionProxyFactoryBean;
     @Autowired
     private DogController dogController;
-
-//    @BeforeClass
-//    private void init() {
-//        dogController = transactionProxyFactoryBean.getObject();
-//    }
 
     @Test
     public void testCreateAndGetDog() {

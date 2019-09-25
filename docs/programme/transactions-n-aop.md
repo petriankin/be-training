@@ -67,7 +67,7 @@ While we separated our business-related logic of service from transaction-relate
 repeating code in `TransactionalDogService` that would be nice to get rid of. But it gets worse when you have many
 services that need to be wrapped with transactions. So the amount of duplication is going to increase with time.
 
-- Read about JDK Dynamic `Proxy` and try some of code for fun before continuing.
+- Read about ([JDK Dynamic `Proxy`](https://www.baeldung.com/java-dynamic-proxies)) and try some of code for fun before continuing.
 - Implement a `TransactionalProxy` class that has the repeating logic from the `TransactionalDogService`. Wrap
 `DogService` with this proxy.
 - Now make sure that this proxy gets initialized and is injected into Controller and your test instead of previous 
@@ -88,7 +88,7 @@ the new proxy for transaction management.
 # Step 5 - AspectJ AOP
 
 Aspect Oriented Programming is a way of introducing cross-cutting (not related to the core logic) aspects to the code.
-Some of the approaches can use proxies like Spring AOP, others can change the bytecode of the classes (like AspectJ).
+Some of the approaches can use proxies like Spring AOP, others can change the bytecode of the classes (like [AspectJ](https://www.baeldung.com/aspectj)).
 
 - Get a firm grip on terms: Pointcut, Join Point, Advise, Aspect.
 - Find the difference between compile-time and load-time weaving.

@@ -1,5 +1,6 @@
 package com.epam.service;
 
+import com.epam.aop.LogMethodInvocation;
 import com.epam.dao.DogDao;
 import com.epam.model.Dog;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ public class DogServiceImpl implements DogService {
     private DogDao dogDao;
 
     @Override
+    @LogMethodInvocation
     public Dog createDog(Dog dog) {
         dog.setId(UUID.randomUUID());
         return dogDao.createDog(dog);
