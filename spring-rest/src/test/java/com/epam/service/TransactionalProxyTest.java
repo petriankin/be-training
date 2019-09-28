@@ -1,35 +1,21 @@
 package com.epam.service;
 
-import com.epam.JdbcConnectionHolder;
-import com.epam.dao.impl.JdbcDogDaoPreparedStatements;
+import com.epam.transactions.jdkdynamic.TransactionalProxy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Proxy;
 
-import static org.testng.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Test
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class TransactionalProxyTest extends AbstractTestNGSpringContextTests {
 
-//    @Qualifier("dogServiceImpl")
-//    @Autowired
-//    private DogServiceImpl dogService;
-//
-//    @Autowired
-//    private JdbcConnectionHolder jdbcConnectionHolder;
-
     @Autowired
     private TransactionalProxy transactionalProxy;
-
-    @BeforeMethod
-    public void setUp() {
-    }
 
     @Test
     public void testInvoke() {
@@ -37,6 +23,6 @@ public class TransactionalProxyTest extends AbstractTestNGSpringContextTests {
         DogService dogService = (DogService) Proxy.newProxyInstance(clazz.getClassLoader(),
                 clazz.getInterfaces(),
                 transactionalProxy);
-        
+        assertThat(dogService).isNotNull();
     }
 }
