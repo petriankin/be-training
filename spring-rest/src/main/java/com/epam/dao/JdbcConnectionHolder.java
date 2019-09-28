@@ -1,4 +1,4 @@
-package com.epam;
+package com.epam.dao;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

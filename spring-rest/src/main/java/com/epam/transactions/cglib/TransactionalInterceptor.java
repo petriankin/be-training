@@ -1,23 +1,23 @@
-package com.epam.service;
+package com.epam.transactions.cglib;
 
-import com.epam.JdbcConnectionHolder;
+import com.epam.dao.JdbcConnectionHolder;
 import lombok.AllArgsConstructor;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 @AllArgsConstructor
-public class TransactionalProxy implements InvocationHandler {
+public class TransactionalInterceptor implements MethodInterceptor {
 
-    private DogService dogService;
     private JdbcConnectionHolder connectionHolder;
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
         Object result;
         try {
             connectionHolder.startTransaction();
-            result = method.invoke(dogService, args);
+            result = methodProxy.invokeSuper(o, args);
             connectionHolder.commitTransaction();
         } catch (Exception e) {
             connectionHolder.rollbackTransaction();

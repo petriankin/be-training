@@ -53,7 +53,7 @@ Proxy is a general term for something that takes control and just passes it to o
 a GoF's Proxy Design Pattern that does just that. If I were to name single most important pattern to know - it would be
 Proxy. 
 
-- Explore Proxy Design Pattern. Implement some examples for fun before continuing.
+- Explore ([Proxy Design Pattern](https://www.baeldung.com/java-proxy-pattern)). Implement some examples for fun before continuing.
 - Create a Proxy for your `DogService`, call it `TransactionalDogService`. Make sure that this is what's used
 in the Controller from now on.
 - Migrate all the transaction-related logic to your proxy keeping your old DogService small and clean.

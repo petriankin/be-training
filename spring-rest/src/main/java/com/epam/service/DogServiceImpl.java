@@ -4,10 +4,12 @@ import com.epam.aop.LogMethodInvocation;
 import com.epam.dao.DogDao;
 import com.epam.model.Dog;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @AllArgsConstructor
+@NoArgsConstructor
 public class DogServiceImpl implements DogService {
 
     private DogDao dogDao;

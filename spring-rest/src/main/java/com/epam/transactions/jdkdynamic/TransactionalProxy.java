@@ -1,21 +1,24 @@
-package com.epam.service;
+package com.epam.transactions.jdkdynamic;
 
-import com.epam.JdbcConnectionHolder;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
+import com.epam.dao.JdbcConnectionHolder;
+import com.epam.service.DogService;
+import lombok.AllArgsConstructor;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-public class TransactionalInterceptor implements MethodInterceptor {
+@AllArgsConstructor
+public class TransactionalProxy implements InvocationHandler {
 
+    private DogService dogService;
     private JdbcConnectionHolder connectionHolder;
 
     @Override
-    public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object result;
         try {
             connectionHolder.startTransaction();
-            result = methodProxy.invokeSuper(o, args);
+            result = method.invoke(dogService, args);
             connectionHolder.commitTransaction();
         } catch (Exception e) {
             connectionHolder.rollbackTransaction();

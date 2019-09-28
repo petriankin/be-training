@@ -1,7 +1,8 @@
-package com.epam.service;
+package com.epam.transactions;
 
-import com.epam.JdbcConnectionHolder;
+import com.epam.dao.JdbcConnectionHolder;
 import com.epam.model.Dog;
+import com.epam.service.DogService;
 import lombok.AllArgsConstructor;
 
 import java.sql.Connection;

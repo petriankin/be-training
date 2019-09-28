@@ -1,6 +1,6 @@
 package com.epam.dao.impl;
 
-import com.epam.JdbcConnectionHolder;
+import com.epam.dao.JdbcConnectionHolder;
 import com.epam.dao.DogDao;
 import com.epam.dao.JdbcDogDao;
 import com.epam.model.Dog;

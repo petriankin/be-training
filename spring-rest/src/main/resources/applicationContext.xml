@@ -30,26 +30,38 @@
             <property name="prepareThreshold" value="1"/>
         </bean>
         <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="transactionalProxy" ref="transactionalProxy"/>
+            <constructor-arg name="dogService" ref="transactionalInterceptorFactoryBean"/>
         </bean>
-        <bean id="transactionalDogService" class="com.epam.service.TransactionalDogServiceImpl">
+        <bean id="transactionalDogService" class="com.epam.transactions.TransactionalDogServiceImpl">
             <constructor-arg name="dogService" ref="dogServiceImpl"/>
             <constructor-arg name="connectionHolder" ref="connectionHolder"/>
         </bean>
-        <bean id="transactionProxyFactoryBean" class="com.epam.service.TransactionProxyFactoryBean">
+
+        <!--        cglib-->
+        <bean id="transactionalInterceptorFactoryBean"
+              class="com.epam.transactions.cglib.TransactionalInterceptorFactoryBean">
+            <constructor-arg ref="transactionalInterceptor"/>
+        </bean>
+        <bean id="transactionalInterceptor" class="com.epam.transactions.cglib.TransactionalInterceptor">
+            <constructor-arg ref="connectionHolder"/>
+        </bean>
+
+        <!--        JDK dynamic proxy-->
+        <bean id="transactionProxyFactoryBean" class="com.epam.transactions.jdkdynamic.TransactionProxyFactoryBean">
             <constructor-arg name="transactionalProxy" ref="transactionalProxy"/>
         </bean>
-        <bean id="transactionalProxy" class="com.epam.service.TransactionalProxy">
+        <bean id="transactionalProxy" class="com.epam.transactions.jdkdynamic.TransactionalProxy">
             <constructor-arg name="connectionHolder" ref="connectionHolder"/>
             <constructor-arg name="dogService" ref="dogServiceImpl"/>
         </bean>
+
         <bean id="dogServiceImpl" class="com.epam.service.DogServiceImpl">
             <constructor-arg name="dogDao" ref="dogDao"/>
         </bean>
         <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">
             <constructor-arg ref="connectionHolder"/>
         </bean>
-        <bean id="connectionHolder" class="com.epam.JdbcConnectionHolder">
+        <bean id="connectionHolder" class="com.epam.dao.JdbcConnectionHolder">
             <constructor-arg ref="dataSource"/>
         </bean>
         <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">

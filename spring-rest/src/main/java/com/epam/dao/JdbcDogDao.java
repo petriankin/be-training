@@ -1,6 +1,5 @@
 package com.epam.dao;
 
-import com.epam.JdbcConnectionHolder;
 import com.epam.model.Dog;
 import lombok.AllArgsConstructor;
 
