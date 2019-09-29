@@ -1,7 +1,7 @@
 package com.epam.transactions.cglib;
 
 import com.epam.service.DogService;
-import com.epam.service.DogServiceImpl;
+import com.epam.service.impl.DogServiceImpl;
 import lombok.AllArgsConstructor;
 import net.sf.cglib.proxy.Enhancer;
 import org.springframework.beans.factory.FactoryBean;

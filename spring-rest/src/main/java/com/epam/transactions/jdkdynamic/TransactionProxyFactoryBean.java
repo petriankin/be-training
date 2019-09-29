@@ -1,8 +1,7 @@
 package com.epam.transactions.jdkdynamic;
 
 import com.epam.service.DogService;
-import com.epam.service.DogServiceImpl;
-import com.epam.transactions.jdkdynamic.TransactionalProxy;
+import com.epam.service.impl.DogServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.FactoryBean;
 

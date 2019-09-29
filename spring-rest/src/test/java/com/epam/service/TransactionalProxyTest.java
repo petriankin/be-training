@@ -1,5 +1,6 @@
 package com.epam.service;
 
+import com.epam.service.impl.DogServiceImpl;
 import com.epam.transactions.jdkdynamic.TransactionalProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

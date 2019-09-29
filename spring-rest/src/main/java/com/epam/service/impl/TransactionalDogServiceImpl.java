@@ -1,4 +1,4 @@
-package com.epam.transactions;
+package com.epam.service.impl;
 
 import com.epam.dao.JdbcConnectionHolder;
 import com.epam.model.Dog;

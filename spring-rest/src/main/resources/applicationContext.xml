@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--    <beans profile="dev">-->
     <!--        <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">-->
@@ -22,6 +22,13 @@
     <!--        </bean>-->
     <!--    </beans>-->
 
+    <aop:config>
+        <aop:aspect id="aspect" ref="transactionalAspect">
+            <aop:pointcut id="customTransactional" expression="@annotation(com.epam.annotation.CustomTransactional)"/>
+            <aop:around method="around" pointcut-ref="customTransactional"/>
+        </aop:aspect>
+    </aop:config>
+
     <beans>
         <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
             <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
@@ -30,11 +37,16 @@
             <property name="prepareThreshold" value="1"/>
         </bean>
         <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="transactionalInterceptorFactoryBean"/>
+            <constructor-arg name="dogService" ref="dogServiceImpl"/>
         </bean>
-        <bean id="transactionalDogService" class="com.epam.transactions.TransactionalDogServiceImpl">
+        <bean id="transactionalDogService" class="com.epam.service.impl.TransactionalDogServiceImpl">
             <constructor-arg name="dogService" ref="dogServiceImpl"/>
             <constructor-arg name="connectionHolder" ref="connectionHolder"/>
+        </bean>
+
+        <!--        spring aop-->
+        <bean name="transactionalAspect" class="com.epam.aop.TransactionalAspect">
+            <constructor-arg ref="connectionHolder"/>
         </bean>
 
         <!--        cglib-->
@@ -55,7 +67,7 @@
             <constructor-arg name="dogService" ref="dogServiceImpl"/>
         </bean>
 
-        <bean id="dogServiceImpl" class="com.epam.service.DogServiceImpl">
+        <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
             <constructor-arg name="dogDao" ref="dogDao"/>
         </bean>
         <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">

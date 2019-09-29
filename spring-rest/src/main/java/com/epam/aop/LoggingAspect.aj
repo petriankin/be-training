@@ -7,7 +7,7 @@ public aspect LoggingAspect {
     }
 
     pointcut logMethodInvocation():
-            call(* *(..)) && @annotation(LogMethodInvocation);
+            call(* *(..)) && @annotation(com.epam.annotation.LogMethodInvocation);
 
     before(): logMethodInvocation() {
         log("Method invoked: " + thisJoinPoint.getSignature());

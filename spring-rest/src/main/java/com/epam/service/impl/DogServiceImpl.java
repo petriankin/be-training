@@ -1,8 +1,10 @@
-package com.epam.service;
+package com.epam.service.impl;
 
-import com.epam.aop.LogMethodInvocation;
+import com.epam.annotation.CustomTransactional;
+import com.epam.annotation.LogMethodInvocation;
 import com.epam.dao.DogDao;
 import com.epam.model.Dog;
+import com.epam.service.DogService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +18,7 @@ public class DogServiceImpl implements DogService {
 
     @Override
     @LogMethodInvocation
+    @CustomTransactional
     public Dog createDog(Dog dog) {
         dog.setId(UUID.randomUUID());
         return dogDao.createDog(dog);
@@ -27,11 +30,13 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
+    @CustomTransactional
     public Dog updateDog(UUID id, Dog dog) {
         return dogDao.updateDog(id, dog);
     }
 
     @Override
+    @CustomTransactional
     public void deleteDog(UUID id) {
         dogDao.deleteDog(id);
     }
