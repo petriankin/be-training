@@ -15,7 +15,7 @@ public class TransactionProxyFactoryBean implements FactoryBean<DogService> {
     @Override
     public DogService getObject() {
         Class<DogServiceImpl> clazz = DogServiceImpl.class;
-            return (DogService) Proxy.newProxyInstance(this.getClass().getClassLoader(), clazz.getInterfaces(),
+        return (DogService) Proxy.newProxyInstance(this.getClass().getClassLoader(), clazz.getInterfaces(),
                 transactionalProxy);
     }
 

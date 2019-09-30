@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Test
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
-public class DogServiceTest extends AbstractTestNGSpringContextTests {
+public class DogControllerTest extends AbstractTestNGSpringContextTests {
 
     @Autowired
     private DogController dogController;

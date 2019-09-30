@@ -1,7 +1,7 @@
-package com.epam.service;
+package com.epam.transactions.jdkdynamic;
 
+import com.epam.service.DogService;
 import com.epam.service.impl.DogServiceImpl;
-import com.epam.transactions.jdkdynamic.TransactionalProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
