@@ -88,7 +88,7 @@ method to choose for operations - idempotency solves it for you.
 - Learn what autowired is and how it's defined in XML and Java configurations
 - Read about package-scan and annotation-marked beans
 - Try creating multiple contexts and importing one in another
-- Learn about profiles. Research and think about why this is typically a bad practice to use them. Compare them to 
+- Learn about [profiles](https://www.baeldung.com/spring-profiles). Research and think about why this is typically a bad practice to use them. Compare them to 
 importing contexts.
 
 # Step 4 - Spring MVC

@@ -3,53 +3,28 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!--    <beans profile="dev">-->
-    <!--        <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">-->
-    <!--            <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>-->
-    <!--            <property name="user" value="postgres"/>-->
-    <!--            <property name="password" value="postgres"/>-->
-    <!--            <property name="prepareThreshold" value="1"/>-->
-    <!--        </bean>-->
-    <!--    </beans>-->
+    <!--    Example of VM option for launch-->
+    <!--    -Dspring.profiles.active=pg,common,cglib-->
+    <!--    -Dspring.profiles.active=pg,common,jdkdynamic-->
+    <!--    -Dspring.profiles.active=pg,common,explicitTransactions-->
 
-    <!--    <beans profile="test">-->
-    <!--        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
-    <!--            <property name="driverClassName" value="org.h2.Driver"/>-->
-    <!--            <property name="url" value="jdbc:h2:file:~/test/db"/>-->
-    <!--            &lt;!&ndash;        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>&ndash;&gt;-->
-    <!--            <property name="username" value="sa"/>-->
-    <!--            <property name="password" value="sa"/>-->
-    <!--        </bean>-->
-    <!--    </beans>-->
-
-    <aop:config>
-        <aop:aspect id="aspect" ref="transactionalAspect">
-            <aop:pointcut id="customTransactional" expression="@annotation(com.epam.annotation.CustomTransactional)"/>
-            <aop:around method="around" pointcut-ref="customTransactional"/>
-        </aop:aspect>
-    </aop:config>
-
-    <beans>
-        <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
-            <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
-            <property name="user" value="postgres"/>
-            <property name="password" value="postgres"/>
-            <property name="prepareThreshold" value="1"/>
-        </bean>
-        <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="dogServiceImpl"/>
-        </bean>
-        <bean id="transactionalDogService" class="com.epam.service.impl.TransactionalDogServiceImpl">
-            <constructor-arg name="dogService" ref="dogServiceImpl"/>
-            <constructor-arg name="connectionHolder" ref="connectionHolder"/>
-        </bean>
-
-        <!--        spring aop-->
+    <beans profile="springaop">
+        <aop:config>
+            <aop:aspect id="aspect" ref="transactionalAspect">
+                <aop:pointcut id="customTransactional"
+                              expression="@annotation(com.epam.annotation.CustomTransactional)"/>
+                <aop:around method="around" pointcut-ref="customTransactional"/>
+            </aop:aspect>
+        </aop:config>
         <bean name="transactionalAspect" class="com.epam.aop.TransactionalAspect">
             <constructor-arg ref="connectionHolder"/>
         </bean>
+    </beans>
 
-        <!--        cglib-->
+    <beans profile="cglib">
+        <bean id="dogController" class="com.epam.controller.DogController">
+            <constructor-arg name="dogService" ref="transactionalInterceptorFactoryBean"/>
+        </bean>
         <bean id="transactionalInterceptorFactoryBean"
               class="com.epam.transactions.cglib.TransactionalInterceptorFactoryBean">
             <constructor-arg ref="transactionalInterceptor"/>
@@ -57,8 +32,15 @@
         <bean id="transactionalInterceptor" class="com.epam.transactions.cglib.TransactionalInterceptor">
             <constructor-arg ref="connectionHolder"/>
         </bean>
+        <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
+            <constructor-arg name="dogDao" ref="dogDao"/>
+        </bean>
+    </beans>
 
-        <!--        JDK dynamic proxy-->
+    <beans profile="jdkdynamic">
+        <bean id="dogController" class="com.epam.controller.DogController">
+            <constructor-arg name="dogService" ref="transactionProxyFactoryBean"/>
+        </bean>
         <bean id="transactionProxyFactoryBean" class="com.epam.transactions.jdkdynamic.TransactionProxyFactoryBean">
             <constructor-arg name="transactionalProxy" ref="transactionalProxy"/>
         </bean>
@@ -66,10 +48,27 @@
             <constructor-arg name="connectionHolder" ref="connectionHolder"/>
             <constructor-arg name="dogService" ref="dogServiceImpl"/>
         </bean>
-
         <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
             <constructor-arg name="dogDao" ref="dogDao"/>
         </bean>
+    </beans>
+
+
+    <beans profile="explicitTransactions">
+        <bean id="dogController" class="com.epam.controller.DogController">
+            <constructor-arg name="dogService" ref="transactionalDogService"/>
+        </bean>
+        <bean id="transactionalDogService" class="com.epam.service.impl.TransactionalDogServiceImpl">
+            <constructor-arg name="dogService" ref="dogServiceImpl"/>
+            <constructor-arg name="connectionHolder" ref="connectionHolder"/>
+        </bean>
+        <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
+            <constructor-arg name="dogDao" ref="dogDao"/>
+        </bean>
+    </beans>
+
+
+    <beans profile="common">
         <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">
             <constructor-arg ref="connectionHolder"/>
         </bean>
@@ -83,4 +82,24 @@
         </bean>
     </beans>
 
+
+    <beans profile="pg">
+        <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
+            <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="user" value="postgres"/>
+            <property name="password" value="postgres"/>
+            <property name="prepareThreshold" value="1"/>
+        </bean>
+    </beans>
+
+
+    <beans profile="h2">
+        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+            <property name="driverClassName" value="org.h2.Driver"/>
+            <property name="url" value="jdbc:h2:file:~/test/db"/>
+            <!--        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>-->
+            <property name="username" value="sa"/>
+            <property name="password" value="sa"/>
+        </bean>
+    </beans>
 </beans>
