@@ -67,6 +67,16 @@
         </bean>
     </beans>
 
+    <beans profile="springtx">
+        <bean id="dogDao" class="com.epam.dao.impl.SpringJdbcDogDao">
+            <constructor-arg ref="dataSource"/>
+        </bean>
+        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+            <property name="baselineOnMigrate" value="true"/>
+            <property name="locations" value="classpath:/db/migration"/>
+            <property name="dataSource" ref="dataSource"/>
+        </bean>
+    </beans>
 
     <beans profile="common">
         <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">

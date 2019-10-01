@@ -122,7 +122,7 @@ how it gets the Connections created by `TransactionManager`
 - Prove that Sprint Tx actually is applied and it works in the app
 - Replace Spring AOP config for transactions with `@Transactional` annotations - this is an alternative way of marking 
 methods transactional
-- Replace pure JDBC code with SpringJDBC (`JdbcTemplate`). Look through its code and find how it gets the connections.
+- Replace pure JDBC code with [SpringJDBC (`JdbcTemplate`)](https://www.baeldung.com/spring-jdbc-jdbctemplate). Look through its code and find how it gets the connections.
 - Make sure you understand what Transaction Propagation in Spring Tx.
 - Since transactions are now started at the Service layer your DAO tests are failing. Find a way of starting the
 transactions in tests. As well as rolling them back after the tests.
