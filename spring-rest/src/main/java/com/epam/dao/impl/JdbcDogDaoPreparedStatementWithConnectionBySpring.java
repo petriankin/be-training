@@ -1,18 +1,17 @@
 package com.epam.dao.impl;
 
 import com.epam.dao.DogDao;
-import com.epam.dao.JdbcConnectionHolder;
-import com.epam.dao.JdbcDogDao;
 import com.epam.model.Dog;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @AllArgsConstructor
-public class SpringJdbcDogDao implements DogDao {
+public class JdbcDogDaoPreparedStatementWithConnectionBySpring implements DogDao {
 
     private DataSource dataSource;
 
@@ -104,5 +103,26 @@ public class SpringJdbcDogDao implements DogDao {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    // TODO: 10/3/2019 move to some util and reduce class hierarchy
+    private Dog mapDog(ResultSet resultSet) throws SQLException {
+        Dog dog = null;
+        if (resultSet.next()) {
+            UUID uuid = UUID.fromString(resultSet.getObject(1).toString());
+            String name = resultSet.getString(2);
+            LocalDate dob = resultSet.getDate(3).toLocalDate();
+            int height = resultSet.getInt(4);
+            int weight = resultSet.getInt(5);
+
+            dog = Dog.builder()
+                    .id(uuid)
+                    .name(name)
+                    .dateOfBirth(dob)
+                    .height(height)
+                    .weight(weight)
+                    .build();
+        }
+        return dog;
     }
 }

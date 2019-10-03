@@ -67,8 +67,27 @@
         </bean>
     </beans>
 
+    <beans profile="springJdbc">
+        <bean id="dogController" class="com.epam.controller.DogController">
+            <constructor-arg name="dogService" ref="transactionalDogService"/>
+        </bean>
+        <bean id="transactionalDogService" class="com.epam.service.impl.TransactionalDogServiceImpl">
+            <constructor-arg name="dogService" ref="dogServiceImpl"/>
+            <constructor-arg name="connectionHolder" ref="connectionHolder"/>
+        </bean>
+        <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
+            <constructor-arg name="dogDao" ref="dogDao"/>
+        </bean>
+        <bean id="dogDao" class="com.epam.dao.impl.SpringJdbcDogDaoStatements">
+            <constructor-arg ref="dataSource"/>
+        </bean>
+        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+            <constructor-arg ref="dataSource"/>
+        </bean>
+    </beans>
+
     <beans profile="springtx">
-        <bean id="dogDao" class="com.epam.dao.impl.SpringJdbcDogDao">
+        <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatementWithConnectionBySpring">
             <constructor-arg ref="dataSource"/>
         </bean>
         <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
