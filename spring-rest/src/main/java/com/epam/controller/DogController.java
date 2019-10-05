@@ -22,7 +22,6 @@ public class DogController {
     // TODO: 9/25/2019  the last point at step 7 is incorrect
     // TODO: 9/25/2019 propagation level
 
-
     private DogService dogService;
 
     public DogController(DogService dogService) {

@@ -4,6 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--    Example of VM option for launch-->
+    <!--    -Dspring.profiles.active=pg,common,springaop-->
     <!--    -Dspring.profiles.active=pg,common,cglib-->
     <!--    -Dspring.profiles.active=pg,common,jdkdynamic-->
     <!--    -Dspring.profiles.active=pg,common,explicitTransactions-->
@@ -18,6 +19,12 @@
         </aop:config>
         <bean name="transactionalAspect" class="com.epam.aop.TransactionalAspect">
             <constructor-arg ref="connectionHolder"/>
+        </bean>
+        <bean id="dogController" class="com.epam.controller.DogController">
+            <constructor-arg name="dogService" ref="dogService"/>
+        </bean>
+        <bean id="dogService" class="com.epam.service.impl.DogServiceImpl">
+            <constructor-arg ref="dogDao"/>
         </bean>
     </beans>
 
