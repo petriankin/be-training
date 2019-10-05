@@ -7,11 +7,13 @@ import com.epam.model.Dog;
 import com.epam.service.DogService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class DogServiceImpl implements DogService {
 
     private DogDao dogDao;

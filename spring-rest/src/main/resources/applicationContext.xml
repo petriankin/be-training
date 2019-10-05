@@ -23,17 +23,17 @@
 
     <beans profile="cglib">
         <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="transactionalInterceptorFactoryBean"/>
+            <constructor-arg name="dogService" ref="dogService"/>
         </bean>
-        <bean id="transactionalInterceptorFactoryBean"
-              class="com.epam.transactions.cglib.TransactionalInterceptorFactoryBean">
+        <bean id="dogService" factory-bean="transactionalInterceptorFactory" factory-method="getObject">
+            <property name="dogDao" ref="dogDao"/>
+        </bean>
+        <bean id="transactionalInterceptorFactory"
+              class="com.epam.transactions.cglib.TransactionalInterceptorFactory">
             <constructor-arg ref="transactionalInterceptor"/>
         </bean>
         <bean id="transactionalInterceptor" class="com.epam.transactions.cglib.TransactionalInterceptor">
             <constructor-arg ref="connectionHolder"/>
-        </bean>
-        <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
-            <constructor-arg name="dogDao" ref="dogDao"/>
         </bean>
     </beans>
 
