@@ -34,7 +34,7 @@ public class SpringJdbcDogDaoJdbcTemplate implements DogDao {
     @Override
     public Dog updateDog(UUID id, Dog dog) {
         int rows = jdbcTemplate.update("update dog set NAME = ?, DATE_OF_BIRTH = ?, HEIGHT = ?, WEIGHT = ? where id =?",
-                dog.getName(), dog.getDateOfBirth(), dog.getHeight(), dog.getWeight(), dog.getId());
+                dog.getName(), dog.getDateOfBirth(), dog.getHeight(), dog.getWeight(), id);
 
         if (rows == 0) {
             throw new RuntimeException(String.format("Failed to update dog with id %s", dog.getId()));

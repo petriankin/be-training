@@ -1,9 +1,9 @@
 package com.epam.dao.impl;
 
-import com.epam.dao.JdbcConnectionHolder;
 import com.epam.dao.DogDao;
-import com.epam.dao.JdbcDogDao;
+import com.epam.dao.JdbcConnectionHolder;
 import com.epam.model.Dog;
+import lombok.AllArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,11 +11,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 
-public class JdbcDogDaoStatements extends JdbcDogDao implements DogDao {
+@AllArgsConstructor
+public class JdbcDogDaoStatements implements DogDao {
 
-    public JdbcDogDaoStatements(JdbcConnectionHolder connectionHolder) {
-        super(connectionHolder);
-    }
+    private JdbcConnectionHolder connectionHolder;
 
     @Override
     public Dog createDog(Dog dog) {
@@ -45,7 +44,7 @@ public class JdbcDogDaoStatements extends JdbcDogDao implements DogDao {
                     "select * from dog where id = '%s'", id
             ));
 
-            dog = mapDog(resultSet);
+            dog = Dog.mapDog(resultSet);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
