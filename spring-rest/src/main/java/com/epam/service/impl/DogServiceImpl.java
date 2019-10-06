@@ -23,7 +23,8 @@ public class DogServiceImpl implements DogService {
     @CustomTransactional
     public Dog createDog(Dog dog) {
         dog.setId(UUID.randomUUID());
-        return dogDao.createDog(dog);
+        Dog created = dogDao.createDog(dog);
+        return dogDao.getDog(created.getId());
     }
 
     @Override
@@ -34,7 +35,8 @@ public class DogServiceImpl implements DogService {
     @Override
     @CustomTransactional
     public Dog updateDog(UUID id, Dog dog) {
-        return dogDao.updateDog(id, dog);
+        dogDao.updateDog(id, dog);
+        return dogDao.getDog(id);
     }
 
     @Override

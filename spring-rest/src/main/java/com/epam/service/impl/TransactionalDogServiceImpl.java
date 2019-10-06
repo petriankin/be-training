@@ -5,8 +5,6 @@ import com.epam.model.Dog;
 import com.epam.service.DogService;
 import lombok.AllArgsConstructor;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -17,7 +15,6 @@ public class TransactionalDogServiceImpl implements DogService {
 
     public Dog createDog(Dog dog) {
         Dog createdDog = null;
-
         try {
             connectionHolder.startTransaction();
             createdDog = dogService.createDog(dog);
@@ -46,23 +43,26 @@ public class TransactionalDogServiceImpl implements DogService {
     }
 
     public Dog updateDog(UUID id, Dog dog) {
-        Dog dog1 = null;
-        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
-            dog1 = dogService.updateDog(id, dog);
-        } catch (SQLException e) {
+        Dog updated;
+        try {
+            connectionHolder.startTransaction();
+            updated = dogService.updateDog(id, dog);
+            connectionHolder.commitTransaction();
+        } catch (Exception e) {
             connectionHolder.rollbackTransaction();
             throw new RuntimeException(e);
         }
-        return dog1;
+        return updated;
     }
 
     public void deleteDog(UUID id) {
-        try (Connection connection = connectionHolder.getConnectionWithNoAutoCommit()) {
+        try {
+            connectionHolder.startTransaction();
             dogService.deleteDog(id);
-        } catch (SQLException e) {
+            connectionHolder.commitTransaction();
+        } catch (Exception e) {
             connectionHolder.rollbackTransaction();
             throw new RuntimeException(e);
         }
     }
-
 }
