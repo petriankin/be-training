@@ -1,157 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!--    Example of VM option for launch-->
-    <!--    -Dspring.profiles.active=pg,common,jdbcTemplate-->
-    <!--    -Dspring.profiles.active=pg,common,springaop-->
-    <!--    -Dspring.profiles.active=pg,common,cglib-->
-    <!--    -Dspring.profiles.active=pg,common,jdkdynamic-->
-    <!--    -Dspring.profiles.active=pg,common,explicitTransactions-->
+    <import resource="contexts/jdbcTemplate.xml"/>
+<!--    <import resource="contexts/springAop.xml"/>-->
+<!--    <import resource="contexts/cglib.xml"/>-->
+<!--    <import resource="contexts/jdkDynamicProxy.xml"/>-->
+<!--    <import resource="contexts/explicitTransactions.xml"/>-->
 
-    <beans profile="jdbcTemplate">
-        <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="dogService"/>
-        </bean>
-        <bean id="dogService" class="com.epam.service.impl.DogServiceImpl">
-            <constructor-arg ref="dogDao"/>
-        </bean>
-        <bean id="dogDao" class="com.epam.dao.impl.SpringJdbcDogDaoJdbcTemplate">
-            <constructor-arg ref="jdbcTemplate"/>
-        </bean>
-        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-            <property name="dataSource" ref="dataSource"/>
-        </bean>
-    </beans>
+    <!--    <beans profile="springtx">-->
+    <!--        <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatementWithConnectionBySpring">-->
+    <!--            <constructor-arg ref="dataSource"/>-->
+    <!--        </bean>-->
+    <!--        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">-->
+    <!--            <property name="baselineOnMigrate" value="true"/>-->
+    <!--            <property name="locations" value="classpath:/db/migration"/>-->
+    <!--            <property name="dataSource" ref="dataSource"/>-->
+    <!--        </bean>-->
+    <!--    </beans>-->
 
-    <beans profile="springaop">
-        <aop:config>
-            <aop:aspect id="aspect" ref="transactionalAspect">
-                <aop:pointcut id="customTransactional"
-                              expression="@annotation(com.epam.annotation.CustomTransactional)"/>
-                <aop:around method="around" pointcut-ref="customTransactional"/>
-            </aop:aspect>
-        </aop:config>
-        <bean name="transactionalAspect" class="com.epam.aop.TransactionalAspect">
-            <constructor-arg ref="connectionHolder"/>
-        </bean>
-        <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="dogService"/>
-        </bean>
-        <bean id="dogService" class="com.epam.service.impl.DogServiceImpl">
-            <constructor-arg ref="dogDao"/>
-        </bean>
-    </beans>
-
-    <beans profile="cglib">
-        <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="dogService"/>
-        </bean>
-        <bean id="dogService" factory-bean="transactionalInterceptorFactory" factory-method="getObject">
-            <property name="dogDao" ref="dogDao"/>
-        </bean>
-        <bean id="transactionalInterceptorFactory"
-              class="com.epam.transactions.cglib.TransactionalInterceptorFactory">
-            <constructor-arg ref="transactionalInterceptor"/>
-        </bean>
-        <bean id="transactionalInterceptor" class="com.epam.transactions.cglib.TransactionalInterceptor">
-            <constructor-arg ref="connectionHolder"/>
-        </bean>
-    </beans>
-
-    <beans profile="jdkdynamic">
-        <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="transactionProxyFactoryBean"/>
-        </bean>
-        <bean id="transactionProxyFactoryBean" class="com.epam.transactions.jdkdynamic.TransactionProxyFactoryBean">
-            <constructor-arg name="transactionalProxy" ref="transactionalProxy"/>
-        </bean>
-        <bean id="transactionalProxy" class="com.epam.transactions.jdkdynamic.TransactionalProxy">
-            <constructor-arg name="connectionHolder" ref="connectionHolder"/>
-            <constructor-arg name="dogService" ref="dogServiceImpl"/>
-        </bean>
-        <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
-            <constructor-arg name="dogDao" ref="dogDao"/>
-        </bean>
-    </beans>
+    <!--    <beans profile="common">-->
+    <!--        <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">-->
+    <!--            <constructor-arg ref="connectionHolder"/>-->
+    <!--        </bean>-->
+    <!--        <bean id="connectionHolder" class="com.epam.dao.JdbcConnectionHolder">-->
+    <!--            <constructor-arg ref="dataSource"/>-->
+    <!--        </bean>-->
+    <!--        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">-->
+    <!--            <property name="baselineOnMigrate" value="true"/>-->
+    <!--            <property name="locations" value="classpath:/db/migration"/>-->
+    <!--            <property name="dataSource" ref="dataSource"/>-->
+    <!--        </bean>-->
+    <!--    </beans>-->
 
 
-    <beans profile="explicitTransactions">
-        <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="transactionalDogService"/>
-        </bean>
-        <bean id="transactionalDogService" class="com.epam.service.impl.TransactionalDogServiceImpl">
-            <constructor-arg name="dogService" ref="dogServiceImpl"/>
-            <constructor-arg name="connectionHolder" ref="connectionHolder"/>
-        </bean>
-        <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
-            <constructor-arg name="dogDao" ref="dogDao"/>
-        </bean>
-    </beans>
-
-    <beans profile="springJdbc">
-        <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="transactionalDogService"/>
-        </bean>
-        <bean id="transactionalDogService" class="com.epam.service.impl.TransactionalDogServiceImpl">
-            <constructor-arg name="dogService" ref="dogServiceImpl"/>
-            <constructor-arg name="connectionHolder" ref="connectionHolder"/>
-        </bean>
-        <bean id="dogServiceImpl" class="com.epam.service.impl.DogServiceImpl">
-            <constructor-arg name="dogDao" ref="dogDao"/>
-        </bean>
-        <bean id="dogDao" class="com.epam.dao.impl.SpringJdbcDogDaoStatements">
-            <constructor-arg ref="dataSource"/>
-        </bean>
-        <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-            <constructor-arg ref="dataSource"/>
-        </bean>
-    </beans>
-
-    <beans profile="springtx">
-        <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatementWithConnectionBySpring">
-            <constructor-arg ref="dataSource"/>
-        </bean>
-        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
-            <property name="baselineOnMigrate" value="true"/>
-            <property name="locations" value="classpath:/db/migration"/>
-            <property name="dataSource" ref="dataSource"/>
-        </bean>
-    </beans>
-
-    <beans profile="common">
-        <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">
-            <constructor-arg ref="connectionHolder"/>
-        </bean>
-        <bean id="connectionHolder" class="com.epam.dao.JdbcConnectionHolder">
-            <constructor-arg ref="dataSource"/>
-        </bean>
-        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
-            <property name="baselineOnMigrate" value="true"/>
-            <property name="locations" value="classpath:/db/migration"/>
-            <property name="dataSource" ref="dataSource"/>
-        </bean>
-    </beans>
+    <!--    <beans profile="pg">-->
+    <!--        <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">-->
+    <!--            <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>-->
+    <!--            <property name="user" value="postgres"/>-->
+    <!--            <property name="password" value="postgres"/>-->
+    <!--            <property name="prepareThreshold" value="1"/>-->
+    <!--        </bean>-->
+    <!--    </beans>-->
 
 
-    <beans profile="pg">
-        <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
-            <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
-            <property name="user" value="postgres"/>
-            <property name="password" value="postgres"/>
-            <property name="prepareThreshold" value="1"/>
-        </bean>
-    </beans>
-
-
-    <beans profile="h2">
-        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-            <property name="driverClassName" value="org.h2.Driver"/>
-            <property name="url" value="jdbc:h2:file:~/test/db"/>
-            <!--        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>-->
-            <property name="username" value="sa"/>
-            <property name="password" value="sa"/>
-        </bean>
-    </beans>
+    <!--    <beans profile="h2">-->
+    <!--        <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+    <!--            <property name="driverClassName" value="org.h2.Driver"/>-->
+    <!--            <property name="url" value="jdbc:h2:file:~/test/db"/>-->
+    <!--            &lt;!&ndash;        <property name="url" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>&ndash;&gt;-->
+    <!--            <property name="username" value="sa"/>-->
+    <!--            <property name="password" value="sa"/>-->
+    <!--        </bean>-->
+    <!--    </beans>-->
 </beans>

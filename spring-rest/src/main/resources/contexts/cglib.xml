@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <beans>
+        <bean id="dogController" class="com.epam.controller.DogController">
+            <constructor-arg name="dogService" ref="dogService"/>
+        </bean>
+        <bean id="dogService" factory-bean="transactionalInterceptorFactory" factory-method="getObject">
+            <property name="dogDao" ref="dogDao"/>
+        </bean>
+        <bean id="transactionalInterceptorFactory"
+              class="com.epam.transactions.cglib.TransactionalInterceptorFactory">
+            <constructor-arg ref="transactionalInterceptor"/>
+        </bean>
+        <bean id="transactionalInterceptor" class="com.epam.transactions.cglib.TransactionalInterceptor">
+            <constructor-arg ref="connectionHolder"/>
+        </bean>
+        <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatements">
+            <constructor-arg ref="connectionHolder"/>
+        </bean>
+        <bean id="connectionHolder" class="com.epam.dao.JdbcConnectionHolder">
+            <constructor-arg ref="dataSource"/>
+        </bean>
+        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+            <property name="baselineOnMigrate" value="true"/>
+            <property name="locations" value="classpath:/db/migration"/>
+            <property name="dataSource" ref="dataSource"/>
+        </bean>
+        <bean name="dataSource" class="org.postgresql.ds.PGSimpleDataSource">
+            <property name="url" value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="user" value="postgres"/>
+            <property name="password" value="postgres"/>
+            <property name="prepareThreshold" value="1"/>
+        </bean>
+    </beans>
+</beans>

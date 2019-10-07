@@ -41,7 +41,8 @@ public class DogControllerTest extends AbstractTestNGSpringContextTests {
         assertThat(updatedDog).isEqualToIgnoringGivenFields(dogToUpdate, "id");
     }
 
-    @Test(dependsOnMethods = {"testCreateAndGetDog"})
+    @Test
+//            (dependsOnMethods = {"testCreateAndGetDog"})
     public void testDeleteDog() {
         Dog dog = TestDataUtils.generateTestDog();
 
