@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -28,7 +29,8 @@ public class SpringJdbcDogDaoJdbcTemplate implements DogDao {
 
     @Override
     public Dog getDog(UUID id) {
-        return jdbcTemplate.queryForObject("select * from dog where id = ?", new DogRowMapper(), id);
+        List<Dog> dogs = jdbcTemplate.query("select * from dog where id = ?", new DogRowMapper(), id);
+        return dogs.isEmpty() ? null : dogs.get(0);
     }
 
     @Override
