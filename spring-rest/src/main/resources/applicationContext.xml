@@ -3,11 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <import resource="contexts/jdbcTemplate.xml"/>
-<!--    <import resource="contexts/springAop.xml"/>-->
-<!--    <import resource="contexts/cglib.xml"/>-->
-<!--    <import resource="contexts/jdkDynamicProxy.xml"/>-->
-<!--    <import resource="contexts/explicitTransactions.xml"/>-->
+    <!--    <import resource="contexts/jdbcTemplate.xml"/>-->
+    <!--    <import resource="contexts/springAop.xml"/>-->
+    <!--    <import resource="contexts/cglib.xml"/>-->
+    <!--    <import resource="contexts/jdkDynamicProxy.xml"/>-->
+    <import resource="contexts/explicitTransactions.xml"/>
 
     <!--    <beans profile="springtx">-->
     <!--        <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatementWithConnectionBySpring">-->
