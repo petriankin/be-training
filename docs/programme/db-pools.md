@@ -23,6 +23,11 @@ talked before?
 
 - Configure `maxPoolSize`, `minPoolSize`. What values would be most appropriate here? How can you correlate them with 
 the thread pool configuration?
+min pool size should be about 1 or if we know that many users will start to use it simultaneously
+ we can increase it but the system start time will increase
+max is about as tomcat's thread pool + connection for async (amount of thread in system that can make queries)
+
+ 
 - Configure `maxStatements` and `maxStatementsPerConnection`. Why do you need these? How do you decide which values
 to put there? How do these correlate with the number of dynamically generated SQL statements and static SQL statements?
  
@@ -36,7 +41,11 @@ of the DB Server directly. But remote DBs involves network.
 - Experiment: what happens if the DB is forcibly restarted? Would the already established connections be valid after 
 that?
 - Think & research: what do network firewalls do with a stalled connection when there is no traffic for some time?
-- Play with `testConnectionOnCheckout`, `testConnectionOnCheckin`, `idleConnectionTestPeriod`
+- Play with `testConnectionOnCheckout` (if need high stability but latency will increase, we need idle check anyway in 
+case if all connection are broken by the time client code needs it, otherwise it will check all the connections in pool
+ and then start to create it that's not good because the idea of connection pool is not to create connection on user 
+ request + increase of latency),
+  `testConnectionOnCheckin` (), `idleConnectionTestPeriod`
 - Think & research: which of the above would you choose and why? Does the choice depend on the type of app that you're
 writing? Would the choice be the same for apps that require low latency? Would it be different for apps that have 
 zero tolerance to errors?

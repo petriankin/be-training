@@ -56,13 +56,7 @@ public class SpringJdbcDogDaoJdbcTemplate implements DogDao {
 
         @Override
         public Dog mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return Dog.builder()
-                    .id(UUID.fromString(rs.getString("id")))
-                    .name(rs.getString("name"))
-                    .dateOfBirth(rs.getDate("date_of_birth").toLocalDate())
-                    .height(rs.getInt("height"))
-                    .weight(rs.getInt("weight"))
-                    .build();
+            return Dog.mapDog(rs);
         }
     }
 }
