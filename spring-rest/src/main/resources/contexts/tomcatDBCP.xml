@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans>
+        <!--        todo fix transactions-->
         <bean id="dogController" class="com.epam.controller.DogController">
             <constructor-arg name="dogService" ref="dogService"/>
         </bean>
@@ -21,7 +22,7 @@
             <property name="locations" value="classpath:/db/migration"/>
             <property name="dataSource" ref="dataSource"/>
         </bean>
-        <jee:jndi-lookup id="dataSource" jndi-name="java:/comp/env/jdbc/MyLocalDB"/>
-        <!--        <bean name="dataSource" class="com.epam.dao.DataSourceFactoryBean"/>-->
+        <bean name="dataSource" class="com.epam.dao.DataSourceFactoryBean">
+        </bean>
     </beans>
 </beans>

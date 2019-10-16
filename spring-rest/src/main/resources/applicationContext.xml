@@ -7,7 +7,8 @@
     <!--    <import resource="contexts/springAop.xml"/>-->
     <!--    <import resource="contexts/cglib.xml"/>-->
     <!--    <import resource="contexts/jdkDynamicProxy.xml"/>-->
-    <import resource="contexts/explicitTransactions.xml"/>
+    <!--    <import resource="contexts/explicitTransactions.xml"/>-->
+    <import resource="contexts/tomcatDBCP.xml"/>
 
     <!--    <beans profile="springtx">-->
     <!--        <bean id="dogDao" class="com.epam.dao.impl.JdbcDogDaoPreparedStatementWithConnectionBySpring">-->
