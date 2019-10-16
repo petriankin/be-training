@@ -20,6 +20,6 @@ public class DataSourceFactoryBean implements FactoryBean<DataSource> {
 
     @Override
     public boolean isSingleton() {
-        return false;
+        return true;
     }
 }
