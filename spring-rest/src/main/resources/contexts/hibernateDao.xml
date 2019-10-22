@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <beans>
+        <bean id="dogController" class="com.epam.controller.DogController">
+            <constructor-arg name="dogService" ref="dogService"/>
+        </bean>
+        <bean id="dogService" class="com.epam.service.impl.DogServiceImpl">
+            <constructor-arg ref="dogDao"/>
+        </bean>
+        <bean id="dogDao" class="com.epam.dao.impl.HibernateDao">
+            <constructor-arg ref="sessionFactory"/>
+        </bean>
+        <bean id="txManager"
+              class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+            <property name="sessionFactory" ref="sessionFactory"/>
+        </bean>
+        <bean id="sessionFactory"
+              class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+            <property name="dataSource"
+                      ref="dataSource"/>
+            <property name="packagesToScan"
+                      value="com.epam"/>
+            <property name="hibernateProperties">
+                <props>
+                    <prop key="hibernate.hbm2ddl.auto">
+                        create-drop
+                    </prop>
+                    <prop key="hibernate.dialect">
+                        org.hibernate.dialect.H2Dialect
+                    </prop>
+                </props>
+            </property>
+        </bean>
+        <bean id="flyway" class="org.flywaydb.core.Flyway" init-method="migrate">
+            <property name="baselineOnMigrate" value="true"/>
+            <property name="locations" value="classpath:/db/migration"/>
+            <property name="dataSource" ref="dataSource"/>
+        </bean>
+        <bean name="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+            <property name="driverClass" value="org.h2.Driver"/>
+            <property name="jdbcUrl" value="jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"/>
+            <property name="user" value="postgres"/>
+            <property name="password" value="postgres"/>
+        </bean>
+    </beans>
+</beans>

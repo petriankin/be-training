@@ -65,7 +65,7 @@ Hibernate XML:
 # Step 1 - How it works
 
 * Read about Hibernate Proxies
-* Read about Entity Lifecycle in Hibernate (PERSISTED, DETACHED, etc)
+* Read about Entity Lifecycle https://www.baeldung.com/hibernate-entity-lifecycle in Hibernate (PERSISTED, DETACHED, etc)
 * Read about Identity Generators (ways to generate IDs). Which one would you prefer and why? Which of them require 
 communication with DB and which don't?
 * Add Hibernate dependencies and look into classes `SessionImpl` and `StatefulPersistenceContext`
