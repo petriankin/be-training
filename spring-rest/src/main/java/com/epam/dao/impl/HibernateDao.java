@@ -30,6 +30,7 @@ public class HibernateDao implements DogDao {
     @Override
     @Transactional
     public Dog updateDog(UUID id, Dog dog) {
+        dog.setId(id);
         getCurrentSession().saveOrUpdate(dog);
         return dog;
     }
