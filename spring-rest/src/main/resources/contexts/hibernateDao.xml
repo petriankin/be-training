@@ -4,12 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <beans>
-        <bean id="dogController" class="com.epam.controller.DogController">
-            <constructor-arg name="dogService" ref="dogService"/>
-        </bean>
-        <bean id="dogService" class="com.epam.service.impl.DogServiceImpl">
-            <constructor-arg ref="dogDao"/>
-        </bean>
+<!--        <bean id="dogController" class="com.epam.controller.DogController">-->
+<!--            <constructor-arg name="dogService" ref="dogService"/>-->
+<!--        </bean>-->
+<!--        <bean id="dogService" class="com.epam.service.impl.DogServiceImpl">-->
+<!--            <constructor-arg ref="dogDao"/>-->
+<!--        </bean>-->
         <bean id="dogDao" class="com.epam.dao.impl.HibernateDao">
             <constructor-arg ref="sessionFactory"/>
         </bean>

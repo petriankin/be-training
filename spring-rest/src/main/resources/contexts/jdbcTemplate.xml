@@ -4,6 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans>
+        <!--        todo fix transactions-->
         <bean id="dogController" class="com.epam.controller.DogController">
             <constructor-arg name="dogService" ref="dogService"/>
         </bean>

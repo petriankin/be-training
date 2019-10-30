@@ -17,6 +17,7 @@ public class HibernateDao implements DogDao {
     @Override
     @Transactional
     public Dog createDog(Dog dog) {
+//        dog.setId(UUID.randomUUID());
         getCurrentSession().save(dog);
         return dog;
     }
