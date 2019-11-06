@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Positive;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -36,6 +38,9 @@ public class Dog {
     @NotNull
     @Positive(message = "Weight must be greater than zero")
     private int weight;
+
+    @OneToMany(mappedBy = "dog")
+    private List<House> houses;
 
     public static Dog mapDog(ResultSet resultSet) throws SQLException {
         Dog dog = null;

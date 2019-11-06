@@ -4,10 +4,9 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="com.epam.model.Dog" table="dog">
-        <id name="id"/>
+        <id name="id">
+            <generator class="uuid"></generator>
+        </id>
         <property name="name" column="name"/>
-        <property name="dateOfBirth" column="date_of_birth"/>
-        <property name="height" column="height"/>
-        <property name="weight" column="weight"/>
     </class>
 </hibernate-mapping>

@@ -96,7 +96,10 @@ change if you choose a different strategy?
 * Create another class, map it and put a collection of it in `Dog`. Play with `fetch` and `lazy` attributes - which of
 them allows for lazy loading and which don't?
 * Make the collection lazy. Load the main entity, then close the session. Now try to access the lazy connection.
-* Given the collection is lazy, how to override this setting with HQL?
+* Given the collection is lazy, how to override this setting with HQL? (left join fetch e.g. Query q = session.createQuery("from Customer c " +
+                                                                                                                          "left join fetch c.vats v " +
+                                                                                                                          "left join fetch v.klMemos bk " +
+                                                                                                                          "left join fetch bk.ferryKlMemos");)
 * Research what Batch Select means and how it can improve the performance
 
 # Alternatives
