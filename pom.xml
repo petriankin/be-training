@@ -16,7 +16,7 @@
         <spring.version>5.1.7.RELEASE</spring.version>
         <lombok.version>1.18.8</lombok.version>
         <hibernate.version>6.0.2.Final</hibernate.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
         <flyway.user>databaseUser</flyway.user>
         <flyway.password>databasePassword</flyway.password>
         <flyway.schemas>schemaName</flyway.schemas>
